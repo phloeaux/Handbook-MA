@@ -1,0 +1,98 @@
+\documentclass[../main.tex]{subfiles}
+\graphicspath{{\subfix{../IMAGES/}}}
+
+\begin{document}
+\localtableofcontents
+
+\textbf{Scalar-by-Matrix Derivatives:}
+
+
+
+\begin{itemize}
+
+    \item \textbf{Derivative of a scalar w.r.t. a vector:}
+
+    \begin{equation}
+    \frac{d}{dx} (a^T x) = a
+    \end{equation}
+
+    where $a \in \mathbb{R}^n$ and $x \in \mathbb{R}^n$.
+
+
+
+    \item \textbf{Derivative of a quadratic form:}
+
+    \begin{equation}
+    \frac{d}{dx} (x^T A x) = 2 A x
+    \end{equation}
+
+    where $A \in \mathbb{R}^{n \times n}$ (symmetric matrix) and $x \in \mathbb{R}^n$.
+
+\end{itemize}
+
+
+
+\subsection{Derivatives Involving Matrix-to-Scalar Functions}
+
+
+
+\begin{itemize}
+
+    \item \textbf{Derivative of a matrix trace w.r.t. a matrix:}
+
+    \begin{equation}
+    \frac{d}{dX} \text{Tr}(A X) = A
+    \end{equation}
+
+    where $A \in \mathbb{R}^{m \times n}$ and $X \in \mathbb{R}^{m \times n}$.
+
+
+
+    \item \textbf{Derivative of a trace quadratic form:}
+
+    \begin{equation}
+    \frac{d}{dX} \text{Tr}(X^T A X) = A X + A^T X
+    \end{equation}
+
+    where $X \in \mathbb{R}^{n \times p}$ and $A \in \mathbb{R}^{n \times n}$.
+
+\end{itemize}
+
+
+
+\subsection{Derivatives of Determinants and Inverses}
+
+
+
+\begin{itemize}
+
+    \item \textbf{Derivative of the determinant:}
+
+    \begin{equation}
+    \frac{d}{dX} \det(X) = \det(X) (X^{-1})^T
+    \end{equation}
+
+    where $X \in \mathbb{R}^{n \times n}$ is invertible.
+
+
+
+    \item \textbf{Derivative of the matrix inverse:}
+
+    \begin{equation}
+    \frac{d}{dX} X^{-1} = -X^{-1} \left( \frac{d}{dX} X \right) X^{-1}
+    \end{equation}
+
+    where $X \in \mathbb{R}^{n \times n}$.
+
+
+
+    \item \textbf{Derivative of the log-determinant:}
+
+    \begin{equation}
+    \frac{d}{dX} \log \det(X) = X^{-1}
+    \end{equation}
+
+    where $X \in \mathbb{R}^{n \times n}$.
+
+\end{itemize}
+\end{document}

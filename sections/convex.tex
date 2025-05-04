@@ -1,0 +1,962 @@
+\documentclass[../main.tex]{subfiles}
+\graphicspath{{\subfix{../IMAGES/}}}
+
+\begin{document}
+\localtableofcontents
+
+\subsection{Introduction}
+The mathematical optimization problem is described as : \begin{equation}
+\begin{gathered}
+    \text{P : minimize}_x f_0(x)\\
+    \text{subject to } x\in \mathcal{X}\\
+\end{gathered}
+\end{equation}
+with : \begin{itemize}
+    \item x the decision variables\\
+    \item $f_0$ the objective function \\
+    \item $\mathcal{X}$ the feasible set\\
+\end{itemize}
+
+The \textbf{infimum of problem P} is the largest I such that $f_0(x) \geq I \forall x \in \mathcal{X}$. If P has a minimizer, then the minimum is equal to the infimum. P always has an infimum but may have no minimum. \\
+
+Problem P is called \textbf{feasible} if $\mathcal{X} \neq 0$ otherwise the problem is called \textbf{infeasible}. P is called \textbf{unbounded if} $\inf P = -\infty$. P is solvable if it has at least one minimizer.\\
+
+Local minimizer : \\
+\begin{theorem}
+    If $\exists x^* \in \mathcal{X}$ and $\delta>0$ such that $f_0(x) \geq f_0(x^*)$ $\forall x \in \mathcal{X}$ with $\lvert \lvert x - x^* \rvert \rvert \leq \delta$ then $x^*$ is called a local minimizer and $f_0(x^*)$ a local minimum of P.
+\end{theorem}
+
+$\varepsilon$-Optimal solutions : \\
+\begin{theorem}
+    $x_\varepsilon \in \mathcal{X}$ is called an $\varepsilon$-optimal solution of P if $\varepsilon > 0$ and $f_0(x_\varepsilon) - \inf P < \varepsilon$
+\end{theorem}
+
+Different methods provide different candidate solutions : \begin{itemize}
+    \item feasible solutions : heuristics, no guarantees on optimality\\
+    \item local minimizers : could be arbitrarily suboptimal\\
+    \item $\varepsilon$-optimal solutions : best we can hope for\\
+    \item global minimizers : usually too ambitious\\
+\end{itemize}
+
+The \textbf{arithmetic complexity} Compl${}_M (\varepsilon, P)$ is the number of arithmetic operations needed to find the optimal problem P.
+A solution i called efficient if there exists a polynomial $\pi$ such that \begin{equation}
+        \text{Compl}{}_M (\varepsilon, P) \leq \pi(\text{dim(Data(P)), Digits(P,}\varepsilon)) \: \forall P\in \mathcal{P}, \varepsilon>0
+    \end{equation}
+With dim(Data(P)) the number of parameters needed to describe P and Digits(P, $\varepsilon$) the number of accuracy digits ($\simeq \log (1/\varepsilon$)).\\
+
+
+A solution is called inefficient if it suffers from \textbf{a curse of dimensionality}, that is if there exists instances $P\in \mathcal{P}$ such that : \begin{itemize}
+    \item Compl${}_M(\varepsilon, P)$ grows exponentially with dim(Data(P))\\
+    \item Compl${}_M(\varepsilon, P)$ grows as $1/\varepsilon^c$, c>0 when $\varepsilon \rightarrow 0$\\
+\end{itemize}
+
+\subsection{Convex sets}
+\begin{theorem}
+    Let $\mathcal{X}$ be a convex set. A function $f:\mathcal{X} \rightarrow \mathbb{R}$ is called convex if \begin{equation}
+        f(\theta x + (1-\theta)y) \leq \theta f(x) + (1-\theta) f(y)
+    \end{equation}
+\end{theorem}
+\begin{itemize}
+    \item Line through $x_1$, $x_2$ is the set of all points $\forall \theta \in \mathbb{R}$\\
+    \item Line segment between $x_1$ and $x_2$ is the set of all points $\forall \theta \in [0,1]$\\
+    \item Ray emanating from $x_2$ through $x_1$ is the set of all points $\forall \theta \in \mathbb{R}_+$\\
+\end{itemize}
+\begin{equation}
+    x = \theta x_1 + (1-\theta)x_2
+\end{equation}
+
+A set is :
+\begin{itemize}
+    \item affine if it contains all line through any two of its points\\
+    \item convex if it contains all line segments through any two points\\
+    \item cone if it contains every ray emanating from 0 through any of its points\\
+\end{itemize}
+
+\warning Every affine set is convex.\\
+The space $\mathbb{S}^n$ of symmetric matrices in $\mathbb{R}^{nxn}$ is affine. Its dimension is $n\frac{n+1}{2}$\\
+
+\textbf{Hyperplanes} of the form $H = \{ x : a^T x=b \}$ with normal vector $a\neq 0$ are affine. It splits the space into convex halfspaces.\\
+
+\textbf{A polyhedron} is an intersection of halfspaces. It can be written as : $P = \{x : Ax \leq b\}$, where A is the matrix with rows $a_i^T$, b is the vector with entries $b_i$. \textbf{Polyhedra are convex}.\\
+
+\textbf{Euclidean ball} with radius $\varepsilon$ around $\mu$ is representable as : $\mathcal{B}(\mu, \varepsilon) = \{\mu + \varepsilon u :\lvert \lvert u \rvert \rvert_2 \leq 1\}$. \textbf{It is convex}.\\
+
+\textbf{Ellipsoid} with center $\mu$ is a convex set (with A nonsingular square matrix) : \begin{equation}
+    \begin{gathered}
+        \varepsilon = \{\mu + Au : \lvert \lvert u\rvert \rvert_2 \leq 1 \}\\
+        \varepsilon = \{ x : (x-\mu)^T \sum {}^{-1} (x-\mu) \leq 1\}\\
+    \end{gathered}
+\end{equation}
+Where $\sum = AA^T$\\
+
+\warning If C is a convex cone, $x_1, x_2 \in C \rightarrow x_1+x_2 \in C$. For example : \begin{itemize}
+    \item non-negative orthant : $\mathbb{R}_+^n = \{x \in \mathbb{R}^n : x\geq 0\}$\\
+    \item second-order cone : $\{(x,t) \in \mathbb{R}^n \times \mathbb{R} : \lvert \lvert x \rvert \rvert_2 \leq t \}$\\
+    \item positive semidefinite cone : $\mathbb{S}^n_+ = \{X\in \mathbb{S}^n : X\succ 0 \}$  (positive semidefinite, $z^T X z \geq 0$)\\
+\end{itemize}
+
+\begin{itemize}
+    \item An affine combination : $x = \theta_i x_i$, for $\theta_i \in \mathbb{R}$, $\sum\theta_i = 1$\\
+    \item A convex combination : $x = \theta_i x_i$, for $\theta_i \in \mathbb{R}_+$, $\sum\theta_i = 1$\\
+    \item A conic combination : $x = \theta_i x_i$, for $\theta_i \in \mathbb{R}_+$\\
+\end{itemize}
+
+\begin{itemize}
+    \item The affine hull of X (aff(X)) is the set of all affine combinations of points in X, smallest affine set containing X\\
+    \item The convex hull of X (conv(X)) is the set of all convex combinations of points in X, smallest convex set containing X\\
+    \item The conic hull of X (cone(X)) is the set of all conic combinations of points in X, smallest convex cone containing X\\
+\end{itemize}
+
+To check whether C is convex, we can \begin{itemize}
+    \item verify the basic condition $x_1, x_2 \in C, \theta \in [0,1] \Rightarrow \theta x_1 + (1-\theta) x_2 \in C$\\
+    \item show that C is obtained from simple convex set via transformations that preserve convexity (intersection, Minkowski sum, affine transformation, linear-fractional transformation)\\
+\end{itemize}
+
+The image/preimage of a convex set C is convex if $f$ is affine ($f(x)= Ax+b$) or linear fractional ($f(x) = \frac{Ax+b}{c^Tx +d}, \: A\in \mathbb{R}^{mxn}, b\in \mathbb{R}^m$, here we require $c^T x+d > 0, \forall x\in C$).\\
+
+\quad \underline{Perspective function :}\\
+Special case of linear fractional transformation : \begin{equation}
+    f : \mathbb{R}^{n+1} \rightarrow \mathbb{R}^n, f(x,t) = \frac{x}{t}
+\end{equation}
+
+\begin{theorem}
+    A convex cone $K \subseteq \mathbb{R}^n$ is called \textbf{proper} if it is closed (contains its boundary), solid (contains a ball with positive radius), pointed (contains no entire line).
+\end{theorem}
+
+If $K \subseteq \mathbb{R}^n$ is a \textbf{proper convex cone}, we can define : \begin{itemize}
+    \item $x \leq_K y \Leftrightarrow y-x \in K$
+    \item $x <_K y \Leftrightarrow y-x \in int(K)$
+    \item $x \geq_K y \Leftrightarrow x-y \in K$
+    \item $x >_K y \Leftrightarrow x-y \in int(K)$
+\end{itemize}
+
+\subsection{Convex functions}
+
+\begin{theorem}
+    The epigraph of $f: \mathbb{R}^n \rightarrow (-\infty, +\infty]$ is the set $epi(f) = \{ (x,\alpha) \in \mathbb{R}^{n+1} : \alpha \geq f(x)\}$
+\end{theorem}
+
+\begin{theorem}
+    The domain of $f$ is the set \begin{equation}
+        dom(f) = \{x \in \mathbb{R}^n : f(x) < +\infty \}
+    \end{equation}
+\end{theorem}
+
+\warning $f$ is called proper if $dom(f) \neq \emptyset$\\
+
+\begin{theorem}
+    A function $f$ is convex if its epigraph is a convex set. $f$ is convex if and only if its domain is a convex set and \begin{equation}
+        f(\theta x_1 + (1-\theta) x_2) \leq \theta f(x_1) + (1-\theta) f(x_2)
+    \end{equation}
+    for all $x_1, x_2 \in dom(f), \theta \in [0,1]$
+\end{theorem}
+
+\begin{theorem}
+    The $\alpha$-sublevel set of a function $f$ is defined as $C_\alpha = \{x : f(x) \leq \alpha \}$.\\
+    If $f$ is convex, then all of its sublevel sets are convex.
+\end{theorem}
+
+Example of convex functions : \begin{itemize}
+    \item Affine $f(x) = a^T x + b$
+    \item p-norms $f(x) = \lvert \lvert x \rvert \rvert_p$
+    \item indicator function of a convex set C $f(x) = \begin{cases}
+        0 & \text{if } x\in C\\
+        \infty & \text{else}\\
+    \end{cases}$
+    \item Trace functions $f(X) = tr(A^TX)$
+    \item Maximum eigenvalues $f(X) = \lambda_{max} (X)$
+    \item Spectral norm $f(X) = \lvert \lvert X \rvert \rvert_2 = sup_{v \neq 0} \lvert \lvert Xv\rvert \rvert_2 / \lvert \lvert v\rvert \rvert_2$
+\end{itemize}
+
+\quad \underline{1st order conditions :}\\
+\begin{theorem}
+    A function $f$ is differentiable if its gradient $\nabla f$ exists at each point in $dom(f)$ and $dom(f)$ is open.\\
+    A differentiable function $f$ is convex if and only if $dom(f)$ is convex and \begin{equation}
+        f(y) \geq f(x) + \nabla f(x)^T (y-x) \forall x,y\in dom(f)
+    \end{equation}
+\end{theorem}
+
+\quad \underline{2nd order conditions :}\\
+
+\begin{theorem}
+    A function $f$ is twice differentiable if its Hessian $\nabla^2 f$ exists at each point in $dom(f)$ and $dom(f)$ is open. \\
+    A twice differentiable function $f$ is convex if and only if $dom(f)$ is convex and \begin{equation}
+        \nabla^2 f(x) \geq 0 \forall x \in dom(f)
+    \end{equation}
+\end{theorem}
+
+A function $f$ is convex if and only if each univariate function $g : \mathbb{R} \rightarrow (-\infty, +\infty]$ of the form \begin{equation}
+    g(t) = f(a + tb) \text{ for a,b } \in \mathbb{R}^n
+\end{equation}
+is convex in t.\\
+
+The log-determinant function $f(X) = -\log det(X)$ is convex on the set of positive definite matrices $\mathbb{S}^n_{++}$.\\
+
+We can establish convexity of $f$ by showing that $f$ is obtained from simple convex functions via transformations that preserve convexity : \begin{itemize}
+    \item non-negative weighted sum
+    \item composition with affine function : \begin{itemize}
+        \item affine transformation of inputs (if $f$ is convex then $g(x) = f(Ax+b)$ is convex)
+        \item non-negative affine transformation of outputs (if $f_i$ are convex and $\rho_i$ are non-negative numbers then the conic combination $g(x) = \rho_i f_i(x)$ is convex)
+        \item this can be generalised for integrals
+    \end{itemize}
+    \item pointwise maximum and supremum (if $f_i$ are convex, then $g(x) = \max(f_i)$ is also convex, same goes for supremum)
+    \item composition : \begin{theorem}
+        if $g: \mathbb{R}^n \rightarrow \mathbb{R}^k$ is convex in each component and $h: \mathbb{R}^k \rightarrow \mathbb{R}$ is convex non decreasing, then $f: \mathbb{R}^n \rightarrow \mathbb{R}$ with $f(x) = h(g(x))$ is convex
+    \end{theorem}
+    \begin{theorem}
+        if $g: \mathbb{R}^n \rightarrow \mathbb{R}^k$ is concave in each component and $h: \mathbb{R}^k \rightarrow \mathbb{R}$ is convex non increasing in each component, then $f: \mathbb{R}^n \rightarrow \mathbb{R}$ with $f(x) = h(g(x))$ is convex
+    \end{theorem}
+    \item minimization \begin{theorem}
+        If $f(x,y)$ and $g(x,y)$ are convex in $(x,y)$ and C is a convex set, then the optimal value function $h(x) = \inf_{y \in C} f(x,y)$ s.t. $g(x,y) \leq 0$ is convex.
+    \end{theorem}
+    \item perspective \begin{theorem}
+        If $f(x)$ is convex, then the perspective of $f$ defined as $g(x,t) = tf(x/t)$, $dom(g) = \{(x,t) : (x/t) \in dom(f), t>0 \}$ is convex in $(x,t)$.
+    \end{theorem}
+\end{itemize}
+
+\begin{theorem}
+    Schur's lemma :\\
+    A block matrix with a positive definite diagonal block is psd if and only if its block Schur complement is psd.\\
+    Consider $X \in \mathbb{S}^n$ partitioned as $X =\begin{pmatrix}
+        A & B\\ B^T & C\\
+    \end{pmatrix}$ where $C>0$ then \begin{equation}
+        X\geq 0 \Leftrightarrow A-BC^{-1}B^T \geq0
+    \end{equation}
+    The matrix $A-BC^{-1}B^T$ is called the Schur complement of C.
+\end{theorem}
+
+\warning The distance of x to a fixed convex set C is convex in x.\\
+
+\begin{theorem}
+    Let $K\subseteq \mathbb{R}^m$ be a proper convex cone. The function $f: \mathbb{R}^n \rightarrow \mathbb{R}^m$ is called K-convex if \begin{equation}
+        f(\theta x + (1-\theta)y) \leq_K \theta f(x) + (1-\theta) f(y) \: \forall x,y \in \mathbb{R}^n, \theta \in [0,1]
+    \end{equation} 
+    If $K$ is a proper convex cone and $f$ is a K-convex function, then the set $C = \{x : f(x) \leq_k 0\}$ is convex.
+\end{theorem}
+
+\quad \underline{Support function :}\\
+The \textbf{support function is defined as} : \begin{equation}
+    supp(x) = \sup_y y^T x
+\end{equation}
+
+\subsection{Optimization problems}
+
+\begin{center}
+    P: minimize $f_0(x)$\\
+    subject to $f_i(x) \leq 0 \forall i=1,\cdots, m$\\
+    $h_i(x) = 0 \forall i=1,\cdots, m$
+\end{center}
+
+If $\inf P = \infty \Leftrightarrow P$ is infeasible. $\inf P = -\infty \Leftrightarrow P$ is unbounded.\\
+
+For maximization problems, we have $\sup_{x \in X}\overline{f}_0(x) = -\inf_{x \in X} f_0(x)$, where $f_0(x) = -\overline{f}_0(x)$.\\
+
+\begin{theorem}
+    The feasible set of a convex optimization problem is convex.
+\end{theorem}
+
+The objective and inequality constraint functions are convex while all equality constraint functions are linear.\\
+The standard form is therefore : \begin{center}
+    P: minimize $f_0(x)$\\
+    subject to $f_i(x) \leq 0 \forall i=1, \cdots, m$\\
+    $a_i^T x = b_i \forall i=1, \cdots, p$
+\end{center}
+
+\begin{theorem}
+    Every locally optimal solution of a convex optimization problem is also globally optimal.
+\end{theorem}
+
+\begin{theorem}
+    For P convex, $x^*$ is optimal iff it is feasible and $\nabla f_0(x^*)^T (x-x^*) \geq 0$ for all feasible $x$.
+\end{theorem}
+
+Two problems P and P' are equivalent if the solution of P' is obtained from P via elementary transformations.\\
+
+\warning Problems with n variables and encoded in L inputs bits can be solved in $O(n^{3.5} L)$ arithmetic operations via interior point methods.\\
+
+\subsubsection{Transportation problem}
+\begin{center}
+    minimize $\sum_{i=1}^m \sum_{j=1}^n c_{ij} x_{ij}$ (transportation costs)\\
+    subject to $\sum_{j=1}^n x_{ij} = a_i$ (total shipment from source i)\\
+    $\sum_{i=1}^m x_{ij} = b_j$ (total shipment to destination j)\\
+    $x_{ij} \geq 0$\\
+\end{center}
+
+\subsubsection{Project scheduling}
+\begin{itemize}
+    \item tasks : $V = \{1,\cdots, n\}$
+    \item precedences : $E\subseteq V \times V$
+    \item tasks durations $\xi_v, v \in V$
+\end{itemize}
+\begin{center}
+    $\min_{s \in \mathbb{R}_+^n} s_n + \xi_n$\\
+    s.t. $s_v \geq s_u + \xi_u \forall (u,v) \in E$, $s$ the start time.
+\end{center}
+
+\subsubsection{Chebyshev center of a polyhedron}
+It is the center of the largest ball inside $P = \{x: a_i^T x \leq b_i, i=1,\cdots, m\}$.\\
+
+\begin{center}
+    $\max_{x_c,r} r$\\
+    s.t. $a_it^T x_c + r \lvert \lvert a_i\rvert \rvert_2 \leq b_i$
+\end{center}
+
+\subsubsection{Quadratic program (QP)}
+\begin{center}
+    minimize $\frac{1}{2} x^T Px + q^Tx + r$\\
+    s.t. $Ax = b$, $Cx \leq g$
+\end{center}
+
+\subsubsection{Quadratically Constrained QP (QCQP) }
+\begin{center}
+    minimize $\frac{1}{2} x^T P_0 x + q^T_0 x + r_0$\\
+    s.t. $\frac{1}{2} x^T P_i x + q_i^Tx + r_i \leq 0 \forall i=1,\cdots, m$
+\end{center}
+Every LP is a QCQP with $P_i = 0$.\\
+
+\subsubsection{Second-order Cone Program (SOCP)}
+\begin{center}
+    minimize $f^Tx$\\
+    s.t. $\lvert \lvert A_ix + b_i \rvert \rvert_2 \leq c_i^T x + d_i$ $i= 1,\cdots, m$\\
+    $f\in \mathbb{R}^n, A_i \in \mathbb{R}^{n_ixn}, b_i \in \mathbb{R}^{n_i}, c_i \in \mathbb{R}^n, d_i \in \mathbb{R}, F \in \mathbb{R}^{pxn}, g\in \mathbb{R}^p$.
+\end{center}
+
+Inequalities are called second-order cone constraints as the $(n_i + 1)$ dimensional vector $(A_i x + b_i, c_i^T x + d_i)$ belongs to the second-order cone in $\mathbb{R}^{n_i+1}$.\\
+An $\varepsilon$-optimal solution can be found in $O((\sum_{i=1}^m n_i)^{3.5} \log (\varepsilon^{-1}))$.\\
+
+\warning The optimal solution does not necessarily exists!\\
+
+\warning $\lvert \lvert x \rvert \rvert_2^2 \leq st \Leftrightarrow \lvert \lvert \begin{pmatrix}
+    2x\\ s-t\\
+\end{pmatrix} \rvert \rvert_2  \leq s+t$
+
+\subsubsection{Generalized inequalities}
+\begin{center}
+    P: minimize $f_0(x)$\\
+    s.t. $f_i(x) \leq_{K_i} 0 \: \forall i=1, \cdots, m$\\
+    $Ax=b$
+\end{center}
+Assume : \begin{itemize}
+    \item $f_0$ convex, $f_i$ $K_i$-convex
+    \item $K_i \subseteq \mathbb{R}^{k_i}$ is a proper convex cone
+\end{itemize}
+
+P has a convex feasible set and all local optima of P are global optima.\\
+
+A conic form problem is described as \\
+\begin{center}
+    P: minimize $c^Tx$\\
+    s.t. $Fx + g \leq_K 0$\\
+    Ax=b
+\end{center}
+
+The conic form problem reduces to an LP if $K = \mathbb{R}_+^m$.\\
+
+\begin{theorem}
+    Every convex optimization problem can be reformulated as a conic form problem. 
+\end{theorem}
+
+\subsubsection{Semidefinite Program (SDP)}
+\begin{center}
+    minimize $c^Tx$\\
+    s.t. $F_1x_1 + \cdots + F_n x_n \leq G$\\
+    $Ax = b$
+    $c \in \mathbb{R}^n$, $F_1, \cdots, F_n, G \in \mathbb{S}^k$, $A\in \mathbb{R}^{mxn}$, $b\in \mathbb{R}^m$
+\end{center}
+
+The semidefinite constraint is a linear matrix inequality (LMI). \\
+An $\varepsilon$-optimal solution can be found in $O(n^2k^{2.5} \log(\varepsilon^{-1}))$.
+
+\warning Every SOCP is an SDP. And every LP is an SDP.\\
+
+For example, a SOCP : $\lvert \lvert A_ix + b_i \rvert \rvert_2 \leq c_i^T + d_i$ is equivalent to a SDP by the Schur's lemma :\\
+$\Leftrightarrow \begin{pmatrix}
+    c_i^Tx+d_i & (A_ix+b_i)^T\\
+    A_ix + b_i & (c_i^Tx + d_i)I
+\end{pmatrix} \geq 0$
+
+\quad \underline{Eigenvalue minimization :}\\
+Minimize the largest eigenvalue of a matrix. This problem is equivalent to the SDP : minimize $\{t: A(x) \leq tI\}$\\
+Consider $X = R\Lambda R^T\in \mathbb{S}^k$ with $\Lambda = diag(\lambda_1, \cdots, \lambda_k)$ and R othogonal. $\lambda_{max}(X) \leq t \Leftrightarrow \lambda_i \leq t \Leftrightarrow \Lambda \leq tI \Leftrightarrow X = R\Lambda R^T \leq tI$\\
+
+\quad \underline{Hidden SDP constraints :}\\
+\begin{equation}
+    \begin{gathered}
+        X \geq Y^{-1} \Leftrightarrow \begin{pmatrix}
+            X & I \\ I & Y
+        \end{pmatrix} \geq 0\\
+        X \geq YY^T \Leftrightarrow \begin{pmatrix}
+            X & Y\\ Y^T & I\\
+        \end{pmatrix} \geq 0\\
+        (AXB)^TAXB + CXD + (CXD)^T \leq Y \Leftrightarrow \begin{pmatrix}
+            Y - CXD - (CXD)^T & (AXB)^T\\
+            AXB & I 
+        \end{pmatrix} \geq 0
+    \end{gathered}
+\end{equation}
+
+\subsection{Lagrangian duality}
+
+In standard form, we have P: minimize $f_0(x)$ subject to $f_i(x) \leq 0$ and $h_i(x) = 0$.\\
+
+The \textbf{lagrangian L}: $\mathbb{R}^n\times \mathbb{R}_+^m\times \mathbb{R}^p \rightarrow \mathbb{R}$ for problem P defined as \begin{equation}
+    L(x, \lambda, \mu) = f_0(x) + \sum_{i=1}^m \lambda_i f_i(x) + \sum_{i=1}^p \mu_i h_i(x)
+\end{equation}
+With $\lambda_i$ the lagrange multiplier corresponding to $f_i \leq 0$ and $\mu_i$ the lagrange multiplier corresponding to $h_i(x) = 0$.\\
+
+The Lagrangian is concave in $(\lambda, \mu)$ for any fixed x. If P is a convex optimization problem, then the Lagrangian is convex in x for any fixed $(\lambda, \mu)$, it is a saddle function.\\
+
+First, we have $g(\lambda, \mu) = \inf L(x, \lambda, \mu)$.\\
+The dual maximization problem is then : $D \: : \max g(\lambda, \mu) $.\\
+By construction, D is equivalent to a max-min problem. 
+
+\begin{theorem}
+    $g(\lambda, \mu) \leq f(x) \: x\in \mathbb{R}^n, \lambda \in \mathbb{R}_+^m, \mu \in \mathbb{R}^p$.\\
+
+    Corollary : $\sup D \leq \inf P$.\\
+    If D is unbounded, P is infeasible. If P is unbounded, D is infeasible.
+\end{theorem}
+
+\warning Every feasible solution of P (D) provides an upper (lower) bound on both $\inf P$ and $\sup D$.\\
+
+\begin{theorem}
+    $\Delta = \inf P - \sup D$ is called the duality gap. By weak duality, we have $\Delta \geq 0$. If $\Delta = 0$ we say that strong duality holds.\\
+    It always hold if P is a convex problem satisfying a constraint qualification (Slater's constraint qualification : holds if there exists $x_s$ with $f_i(x_s) < 0$ and $h_i(x_s) = 0$)
+\end{theorem}
+
+\subsubsection{Least Squares Problem}
+Primal : min $x^Tx$ s.t. $Ax = b$\\
+Lagrangian : $L(x, \mu) = x^T x + \mu^T (Ax-b)$\\
+Dual objective : $0 = 2x + A^T \mu \Rightarrow g(\mu) = -\frac{1}{4} \mu^T AA^T \mu - b^T \mu$\\
+Dual problem : max $-\frac{1}{4} \mu^T AA^T \mu - b^T \mu$\\
+
+\subsubsection{Linear program}
+Primal : min $c^Tx$ s.t. $Ax=b$, $x\geq 0$\\
+Lagrangian : $L(x, \mu, \lambda) = c^Tx - \lambda^T x + \mu^T (Ax-b)$\\
+Dual objective : $g(\lambda, \mu) = \begin{cases}
+    -b^T \mu & \text{if } c-\lambda + A^T \mu = 0\\
+    -\infty
+\end{cases}$\\
+Dual problem : max $-b^T \mu$ s.t. $A^T \mu \leq c$\\
+
+\subsubsection{Quadratic problem}
+Primal : min $x^T Px$ s.t. $Ax\leq b$\\
+Lagrangian : $L(\lambda, x) = x^T P x + \lambda^T (Ax-b)$\\
+Dual objective : $g(\lambda) = -\frac{1}{4} \lambda^T A P^{-1} A^T \lambda - b^T \lambda$\\
+Dual problem : max $-\frac{1}{4} \lambda^T AP^{-1} A^T \lambda - b^T \lambda$ s.t. $\lambda \geq 0$\\
+
+\subsubsection{SOCP}
+Primal : min $f^T x$ s.t. $\lvert \lvert y_i \rvert \rvert_2 \leq t_i$, $y_i = A_i x + b_i$, $t_i = c_i^Tx+d_i$\\
+Dual problem : max $-\sum_{i=1}^m (b_i^T v_i + d_i \mu_i)$ s.t. $\sum_{i=1}^m (A_i^T v_i + c_i \mu_i) = f$, $\lvert \lvert v_i \rvert \rvert_2 \leq \mu_i$.\\
+
+\begin{theorem}
+    If K is a cone, then $K^* = \{ y \in \mathbb{R}^n : x^T y \geq 0 \forall x \in K\}$ is the dual cone of K.
+\end{theorem}
+
+\quad \underline{Properties of the dual cone :}\\
+\begin{itemize}
+    \item $K^*$ is closed and convex
+    \item $K_2 \subseteq K_1 \Rightarrow K_1^* \subseteq K_2^*$ (the smaller K, the larger $K^*$)
+    \item $K^{**} = cl(conv(K))$m the smallest convex closed superset of K
+    \item if a convex cone K is proper, then $K^*$ is proper and $K^{**} = K$
+\end{itemize}
+
+\warning A cone K is called self-dual if $K^* = K$\\
+
+\subsubsection{Optimality conditions}
+\quad \underline{Complementary slackness :}\\
+Assume that strong duality holds and that $x^*$ is optimal in P while $\lambda^*, \mu^*$ is optimal in D. Then $\sum_1^m \lambda_i^* f_i(x^*) = 0$ which implies complementary slackness : $\lambda_i^* >0 \Rightarrow f_i(x^*) = 0$ and $f_i(x^*) < 0 \Rightarrow \lambda_i^* = 0$.\\
+
+\begin{theorem}
+    Karush-Kuhn-Tucker conditions : \\
+    Assume that $f_0, \cdots, f_m, h_1, \cdots, h_p$ are differentiable, $x^*$ is optimal in P, $(\lambda^*, \mu^*)$ is optimal in D and strong duality holds. Then : \begin{itemize}
+        \item primal feasibility : $f(x^*)\leq 0, h(x^*)=0$
+        \item dual feasibility : $\lambda^* \geq 0$
+        \item complementary slackness : $\lambda_i^* f_i(x^*) = 0$ $\forall i=1,\cdots, m$
+        \item stationarity : $\nabla f_0(x^*) + \sum_{i=1}^m \lambda_i^* \nabla f_i(x^*) + \sum_{i=1}^p \mu_i^* \nabla h_i(x^*) = 0$
+    \end{itemize}
+\end{theorem}
+
+\begin{theorem}
+    Sufficiency : \\
+    If P is convex and $(x^*, \lambda^*, \mu^*)$ satisfies the KKT conditions, then $x^*$ solves P and $(\lambda^*, \mu^*)$
+ solves D.
+ \end{theorem}
+
+\begin{theorem}
+    Necessity :\\
+    Assume that a convex P with differentiable objective and constraint functions satisfies Slater's condition. If $x^*$ solves P, there is $(\lambda^*, \mu^*)$ such that $(x^*, \lambda^*, \mu^*)$ satisfies the KKT conditions.
+\end{theorem}
+
+\quad \underline{Separable objective :}\\
+minimize $f_0(x) = \sum_1^n f_i(x_i)$ s.t. $a^Tx = b$\\
+Then the lagrangian is also separable : $L(x,\mu) = b\mu + \sum_1^n (f_i(x_i) - \mu a_i x_i)$\\
+The dual objective is also separable : $g(\mu) = b\mu + \sum_1^n inf(f_i(x_i) - \mu a_i x_i) = b\mu - \sum_i^n f_i^* (\mu a_i)$\\
+
+\subsubsection{Separation theorems}
+\begin{itemize}
+    \item A set C is called closed if it contains the limits of all converging sequences in C. We denote cl(C) the closure of C (smallest closed set containing C)
+    \item A set C is called open if its complement is closed. We denote int(C) the interior of C (largest open set contained in C.
+    \item We call bd(C) = cl(C)$\backslash$ int(C) the boundary of C
+    \item A function $f$ is called closed if its epigraph is a closed set. We denote cl(f) the closure of $f$ (largest closed function not larger than $f$)
+\end{itemize}
+
+\begin{theorem}
+Strict separating hyperplane theorem : \\
+    Consider a closed convex set C and a point $x_0 \notin C$. Then, there exists $a \neq 0$ and $b$ with $a^Tx<b \forall x \in C$ and $a^T x_0 > b$\\
+
+    Corollary : \\
+    Any convex closed set C coincides with the intersection $C'$ of all closed halfspaces that contain C.
+\end{theorem}
+
+The closure of conv(X) coincides with the intersection of all (closed) halfspaces containing X.\\
+
+We denote by conv($f$) the convex hull of a function $f$ (largest convex function $\leq f$).\\
+The epigraph of conv($f$) is given by the convex hull of epi($f$) : $epi(conv(f)) = \{(x,t) : (x,s) \in conv(epi(f)) \forall s>t\}$.\\
+
+Envelope representations :
+\begin{theorem}
+    If $f$ is proper, convex and closed, then it is the pointwise supremum of all affine functions $\leq f$.\\
+
+    If $f$ is arbitrary function with $conv(f)$ proper, then $cl(conv(f))$ is the pointwise supremum of all affine functions $\leq f$.
+\end{theorem}
+
+Weak separating hyperplane theorem : \begin{theorem}
+    Consider any convex set C and a point $x_0 \notin C$. Then, there exist $a \neq 0$ and $b$ with $a^T x \leq b \forall x \in C$ and $a^T x_0 \geq b$.
+\end{theorem}
+
+Supporting hyperplanes : consider $C \subseteq \mathbb{R}^n$ and a boundary point $x_0 \in bd(C)$. If $a \neq 0$ satisfies $a^T x \leq a^T x_0 \forall x \in C$, then $\{x : a^Tx = a^T x_0\}$ is called a supporting hyperplane to C at $x_0$.\\
+
+\begin{theorem}
+    For every convex set C and any $x_0 \in bd(C)$ there is a supporting hyperplane to C at $x_0$.
+\end{theorem}
+
+Subgradients : Assume that $f$ is a proper convex function and $x_0 \in dom(f)$. Then $y$ is called a subgradient of $f$ at $x_0$ if \begin{equation}
+    f(x) \geq f(x_0) + y^T(x-x_0) \: \forall x \in \mathbb{R}^n
+\end{equation}
+The set $\partial f(x_0)$ of all subgradients is the subdifferential of $f$ at $x_0$.\\
+
+\warning If $f$ is differentiable at $x_0$, then $\partial f(x_0) = \{ \nabla f(x_0)\}$. Generally $\partial f(x_0)$ can be empty or contain one or infinitely many subgradients. $\partial f(x_0)$ is a closed convex set.\\
+
+\begin{theorem}
+    Assume that $f$ is a proper convex function and $x_0 \in int(dom(f))$. Then $\partial f(x_0) \neq \emptyset$.
+\end{theorem}
+
+\subsection{Conjugate duality}
+The conjugate of a function $f$ is defined as \begin{equation}
+    f^* (y) = sup_{x\in \mathbb{R}^n} y^T x - f(x)
+\end{equation}
+$f^*$ assigns to every $y$ the maximum vertical distance between the function $x \mapsto f(x)$. If $f$ is differentiable, this occurs at a point where $\nabla f(x) = y$.
+
+\warning $f^*$ is closed and convex even if $f$ is not. If $f$ is a convex closed function then the biconjugate is $f$ ($f^{**} = f$).\\
+
+\begin{theorem}
+    For any function $f$ with $conv(f)$ proper we have $f^{**} = cl(conv(f))$. If $f$ is proper, convex and closed then $f^{**} = f$.
+\end{theorem}
+
+Perturbing the constraints : let's modify $f_i(x) \leq 0$ with $f_i(x) \leq u_i$ (same for $h_i$). Let's define the optimal value function $\varphi (u,v) = inf q(x,u, v)$. By construction, $\varphi(0,0)$ is the optimal value of P. \\
+We have $inf P = \varphi(0,0)$ and $sup D = \varphi^{**} (0,0)$, then the duality gap is defined as $\Delta = \varphi(0,0) - \varphi^{**} (0,0)$.\\
+
+If $\varphi$ is nonconvex, we may have $\Delta >0$. If $\varphi$ is convex, we usually have $\Delta = 0$.\\
+\warning If $\varphi$ is proper, convex and closed, then $\varphi = \varphi^{**}$. In this case strong duality always holds. P convex $\Rightarrow$ $\varphi$ is convex as q is convex and as convexity is preserved under minimization.\\
+
+\begin{theorem}
+    If $\varphi$ is convex and continuous at $(0,0)$ then strong duality holds.
+\end{theorem}
+
+\begin{center}
+    Checking strong duality reduces to checking continuity of $\varphi$.
+\end{center}
+
+\begin{theorem}
+    If P is convex and satisfies Slater's constraint qualification, then strong duality holds, and the dual problem is solvable.\\
+
+    The optimal solutions of D are given by the negative subgradients of $\varphi$ at $(0,0)$.
+\end{theorem}
+
+\subsection{Optimization in statistics and machine learning}
+
+\quad \underline{Maximum likelihood estimation :}\\
+\begin{itemize}
+    \item Distribution estimation : estimate a probability density $p(y)$ of a random variable from observed data.
+    \item Parametric distribution estimation : choose from a family of densities $p_\beta(y)$ parametrized in $\beta$
+    \item Maximum likelihood estimation : observations $y_i$. Assume the values are iid samples from $p_\beta$. Then the likelihood to observe $y_i$ is : \begin{equation}
+        l(\beta) = \Pi_{i=1}^m p_\beta (y_i)
+    \end{equation}
+    The parameter most likely to have generated the observations are found by solving $max_\beta l(\beta)$ where : $L(\beta) = \log(l(\beta)) = \sum_{i=1}^m \log(p_\beta(y_i))$
+\end{itemize}
+
+\begin{itemize}
+    \item Linear measurement model : $y_i = x_i^T \beta + v_i$ we have $\max_\beta = L(\beta) = \sum_{i=1}^m \log(p(y_i - x_i^T \beta))$
+    \item Logistic regression : $y = \begin{cases}
+        1 & \text{person x has it}\\
+        -1 & \text{person x does not have it}\\
+    \end{cases}$. Then $p_\beta(y|x) = \frac{1}{1+ \exp(-y \beta^T x)}$.
+\end{itemize}
+
+
+Let $y \in \mathbb{R}^n$ is Gaussian with zero mean and covariance matrix R. Its density is : $p_R(y) = \frac{1}{\sqrt{(2\pi)^n det(R)}} e^{-\frac{1}{2} y^T R^{-1} y}$.\\
+With the sample covariance matrix : $Y = E[yy^T] = \frac{1}{m} \sum y_i y_i^T$.\\
+
+The log-likelihood is then : $L(R) = -\frac{mn}{2} \log(2\pi) - \frac{m}{2} \log(det(R)) -\frac{m}{2} tr(YR^{-1})$\\
+By changing $S = R^{-1}$ (the information matrix), we get a concave function : $L(S) = -\frac{mn}{2} \log(2\pi) + \frac{m}{2} \log(det(S)) - \frac{m}{2} tr(YS)$.\\
+
+\subsubsection{Support Vector Machines (SVM)}
+Given $(x_i, y_i)$, $i=1,\cdots, m$ where $x_i \in \mathbb{R}^d$ are features and $y_i \in \{1, -1\}$ are labels. We want to predict the label of a new $x\in \mathbb{R}^d$.\\
+
+\begin{itemize}
+    \item Hard Margin SVM : Dots are linearly separable. Let's define the hyperplane : $w^T x - b= 0, w \neq 0$ that separates the dots. We then require : $w^T x_i - b \geq 0 \forall i $ with $y_i = 1$ and $w^T x_i-b \leq 0 \forall i$ with $y_i = -1$. The margin is then : $M= \frac{2}{\lvert \lvert w \rvert \rvert_2}$. The QP is then : $min \frac{1}{2} \lvert\lvert w \rvert\rvert_2^2$ s.t. $y_i(w^T x_i - b) \geq 1 \forall i$.\\
+    \item Soft Margin SVM : dots are not linearly separable.
+    The QP is then : $\begin{matrix}
+        min \frac{1}{m} \sum s_i + \frac{\rho}{2} \lvert \lvert w \rvert \rvert_2^2 \text{(regularization term)}\\
+        \text{subject to :} y_i (w^T x_i - b) + s_i \geq 1\\
+        s_i \geq 0 \forall i
+    \end{matrix}$
+    One can write the dual problem as : $\begin{matrix}
+        max \sum \lambda_i - \frac{1}{2\rho} \sum \lambda_i \lambda_j y_i y_j x_i^T x_j\\
+        \text{subject to } \sum y_i \lambda_i = 0, \: 0\leq \lambda_i \leq \frac{1}{m} \forall i
+    \end{matrix}$
+    Then with the KKT conditions, we find that $w = \frac{1}{\rho} \sum \lambda_i y_i x_i$
+ and $b = w^T x_i - y_i $ for any i with $0 < \lambda_i < \frac{1}{m}$
+ \end{itemize}
+ 
+Improve classification via nonlinear separators. Use feature map : $\Phi : \mathbb{R}^d \rightarrow \mathbb{R}^D$ to lift the problem to a high-dimensional feature space $\mathbb{R}^D$, $D>>d$.\\
+
+SVM in high-dimensional space : One can write the dual problem as : $\begin{matrix}
+        max \sum \lambda_i - \frac{1}{2\rho} \sum \lambda_i \lambda_j y_i y_j \Phi(x_i)^T \Phi(x_j)\\
+        \text{subject to } \sum y_i \lambda_i = 0, \: 0\leq \lambda_i \leq \frac{1}{m} \forall i
+    \end{matrix}$.\\
+    The \textbf{Kernel function} is defined as : \begin{equation}
+        K(x,x') = \Phi(x)^T \Phi(x')
+    \end{equation}
+    \warning The size of the dual QD is independent of the feature dimension D. \\
+
+    \subsubsection{Nonlinear dimensionality reduction}
+    Find meaningful low-dimensional structures hidden in high-dimensional observations.\\
+    The optimization problem for unfolding the kNN graph : $\begin{matrix}
+        max \sum \lvert \lvert x_i \rvert \rvert_2^2\\
+        s.t. \sum x_i = 0\\
+        \lvert \lvert x_i-x_j \rvert \rvert_2^2 = \lvert \lvert y_i - y_j \rvert \rvert_2^2 \: \forall(i,j) \in E
+    \end{matrix}$
+(maximize variance of new positions. Require that mean is zero and require that distances between nearest neighbors are kept fixed)\\
+
+\begin{theorem}
+    The unfolding problem is equivalent to : \\
+    $\begin{matrix}
+        max \: tr(X)\\
+        s.t. \sum_{i,j} X_{ij} = 0\\
+        X_{ii} - 2 X_{ij} + X_{jj} = \lvert \lvert y_i- y_j\rvert \rvert_2^2 \: \forall(i,j)\in E\\
+        X \geq 0, rank(X) \leq d
+    \end{matrix}$
+    
+\end{theorem}
+
+\subsection{Convexifying Nonconvex Problems}
+\begin{theorem}
+    The cardinality card(x) of $x \in \mathbb{R}^n$ is the number of non-zero entries of $x$. The cardinality function is non-convex!
+\end{theorem}
+A convex-cardinality problem is convex except for a single cardinality function in the objective or the constraints. Assume $C \subseteq \mathbb{R}^n$ is a convex set, and $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is a convex function. The convex minimum cardinality problem : $\begin{matrix}
+    min \: card(x)\\
+    s.t. x \in C
+\end{matrix}$. The convex problem with cardinality constraint : $\begin{matrix}
+    min \: f(x)\\
+    s.t. x\in C, \: card(x)\leq k
+\end{matrix}$
+
+Exact solution of convex-cardinality problems :\\
+The decision $x\in \mathbb{R}^n$ has $2^n$ sparsity patterns (each component of x can be zero or nonzero). A convex-cardinality problem can thus be solved exactly by solving $2^n$ convex problems. This may be impractical for n large (>15).\\
+One solution is to replace card(x) with $\gamma \lvert \lvert x \rvert \rvert_1$ or add a regulation term to the objective. This is the $l1$-norm heuristic. Tune $\gamma > 0$ to achieve the desired sparsity.\\
+\begin{itemize}
+    \item Convex minimum cardinality problem is equivalent to : $\begin{matrix}
+        min \lvert \lvert x \rvert \rvert_1\\
+        s.t. x\in C
+    \end{matrix}$
+    \item Convex problem with cardinality constraint : $\begin{matrix}
+        min f(x) \\
+        s.t. x\in C\\
+        \lvert \lvert x \rvert \rvert_1 \leq \beta
+    \end{matrix}$ or $\begin{matrix}
+        min f(x) + \gamma \lvert \lvert x \rvert\rvert_1\\
+        s.t. x\in C
+    \end{matrix}$
+\end{itemize}
+
+Interpretation as convex relaxation : $\begin{matrix}
+    min \: card(x)\\
+    s.t. \: x \in C, \lvert \lvert x\rvert \rvert_\infty \leq R
+\end{matrix}$ is equivalent to the mixed-binary problem : $\begin{matrix}
+    min \: \sum z_i\\
+    s.t. \: x\in C, \lvert x_i\rvert \leq Rz_i \: \forall i\\
+    z_i \in \{0,1\}\: \forall i
+\end{matrix}$
+
+The continuous relaxation provides a lower bound on the original convex-cardinality problem.\\
+
+The rank of a matrix is the natural analog of the cardinality of a vector. Note that for any $X \in \mathbb{S}^n_+$, the rank of $X$ equals the number of all strictly positive eigenvalues of $X$, that is : \begin{equation}
+    rank(K) = card([\lambda_1 (X), \cdots, \lambda_n(X)])
+\end{equation}
+A convex-rank problem is convex except for a single rank function in the objective or the constraints. We know that $\lvert\lvert x\rvert\rvert_1$ is a tight convex approximation for $card(x)$. Thus a good convex approximation for $rank(K)$ is : $\lvert\lvert [\lambda_1(X), \cdots, \lambda_n(X)] \rvert\rvert_1 = tr(X)$.\\
+
+\quad \underline{Lift-and-Project Methods :}\\
+
+\begin{itemize}
+    \item Lift a nonconvex problem into a high dimension
+    \item relax the nonconvex constraints
+    \item project the relaxation back onto the original variables to obtain an approximate solution for the original problem
+\end{itemize}
+
+Semidefinite relaxation of a QCQP : \\
+Consider : $\begin{matrix}
+    min \frac{1}{2} x^T Q_0 x + q_0^T x + r_0\\
+    s.t. \frac{1}{2} x^T Q_i x + q_i^T x + r_i \leq 0
+\end{matrix}$ which is NP-hard unless $Q_i \geq 0$.\\
+
+The lifted problem is then : $\begin{matrix}
+    min \frac{1}{2} tr(Q_0 X) + q_0^T x +r_0\\
+    s.t. \frac{1}{2} tr(Q_iX) + q_i^T x + r_i \leq 0\\
+    X = xx^T
+\end{matrix}$.\\
+
+\begin{theorem}
+    $X = xx^T \Leftrightarrow \begin{pmatrix}
+        X & x\\ x^T & 1
+    \end{pmatrix} \geq 0$
+    and $rank\begin{pmatrix}
+        X & x\\ x^T & 1
+    \end{pmatrix} = 1$
+\end{theorem}
+
+By lifting the rank constant out of the QCQP, we obtain the SDP relaxation. It provides a lower bound on the original QCQP. If $(x^*, X^*)$ is a minimizer of the SDP and $X^* = x^*(x^*)^T$, then $x^*$ solves the original QCQP.\\
+
+\begin{theorem}
+    $X \geq 0 \Rightarrow \begin{cases}
+        X_{ii} \geq 0 \: \forall i=1, \cdots, n\\
+        \lvert\lvert \begin{pmatrix}
+            2 X_{ij}\\
+            X_{ii} - X_{jj}
+        \end{pmatrix} \rvert\rvert_2 \geq X_{ii} + X_{jj} \: \forall 1 \leq i < j \leq n
+    \end{cases}$
+\end{theorem}
+
+By the lemma, the QCQP admits the SOCP relaxation : $\begin{matrix}
+    min \: \frac{1}{2} tr(Q_0 X) + q_0^Tx + r_0\\
+    s.t. \frac{1}{2} tr(Q_iX) + q_i^T x + r_i \leq 0\: \forall i=1,\cdots, n\\
+    X_{ii} \geq 0\\
+    \lvert\lvert \begin{pmatrix}
+        2 X_{ij}\\
+        X_{ii} - X_{jj}\\
+    \end{pmatrix} \rvert\rvert_2 \leq X_{ii} + X_{jj}\\
+    \lvert\lvert \begin{pmatrix}
+        2x_i\\
+        X_{ii}- 1
+    \end{pmatrix} \rvert\rvert_2 \leq X_{ii} + 1
+\end{matrix}$
+
+Once again, this provides a lower bound on the SDP relaxation and thus on the original QCQP.\\
+
+\subsubsection{Optimal Power Flow}
+Consider a power system with a set of nodes $\mathcal{N}$. Assume that there is a demand and electricity production at each node. The aim of OPF is to satisfy demand at minimum production costs subject to physical and operational constraints. We have : \begin{itemize}
+    \item $g_{nm}$ : conductance of line from n to m
+    \item $b_{nm}$ : susceptance of line from n to m
+    \item $g_n$ : shunt conductance of node n
+    \item $b_n$ : shunt susceptance of node n
+\end{itemize}
+
+It can be modeled with : \\
+$\begin{matrix}
+    min_{p^g, q^g, e, f\in \mathbb{R}^{\lvert \mathcal{N} \rvert}} \sum_{n\in\mathcal{N}} c_n (p_n^g)\\
+    s.t. \: \sum_{m\in \mathcal{N}} G_{nm}(e_n e_m + f_nf_m) - \sum_{m\in \mathcal{N}} B_{nm} (e_n f_m - e_mf_n) = p_n^g - p_n^d \: \forall n \in \mathcal{N}\\
+    -\sum_{m\in \mathcal{N}} B_{nm}(e_n e_m + f_nf_m) - \sum_{m\in \mathcal{N}} G_{nm} (e_n f_m - e_mf_n) = q_n^g - q_n^d \: \forall n \in \mathcal{N}\\
+    \underline{p}_n \leq p_n^g \leq \overline{p}_n\\
+    \underline{q}_n \leq q_n^g \leq \overline{q}_n\\
+    \underline{v}_n^2 \leq e_n^2 + f_n^2 \leq \overline{v}_n^2\\
+\end{matrix}$
+Where the decision variables are : \begin{itemize}
+    \item $p^g$ : active power production at nodes
+    \item $q^g$ : reactive power production at nodes
+    \item $e$ : real part of nodal voltage phasors
+    \item $f$ imaginary part of nodal voltage phasors
+\end{itemize}
+
+The objective function is the total cost of producing active power. $c_n$ is assumed to be linear or convex quadratic. There is a conservation of reactive power at each node : \begin{itemize}
+    \item $q_n^d$ : reactive demand at node n
+    \item $q_n^g - q_n^d$ : net reactive power injection into node n
+\end{itemize}
+There, there are bounds on active power generated at each node as well as bounds on reactive power.\\
+\warning OPF problem is a highly nonconvex QCQP.\\
+The SDP relaxation of the problem can be expressed by replacing : \begin{itemize}
+    \item $E_{nm} = e_n e_m$
+    \item $F_{nm} = f_nf_m$
+    \item $H_{nm} = e_n f_m$
+\end{itemize}
+And we add the constraint : $\begin{pmatrix}
+    E & H \\ H^T & F
+\end{pmatrix} \geq 0$. This is solvable in polynomial time.\\
+
+\subsubsection{Managing a holiday resort}
+Given n activities, m persons. Each activity can take place in the morning or in the afternoon. Each person is interested in two activities. Find a schedule for the activities to maximize the number of persons that can enjoy both activities.\\
+
+It is a max-cut problem. Given a graph with vertex set $\{1, \cdots, n\}$ and weights $w_{ij} = w_{ji} \geq 0$ for all $1\leq i < j \leq n$. Problem, find a cut S, $\overline{S}$ with $S \cap \overline{S} = \emptyset$ and $S \cup \overline{S} = \{1, \cdots, n\}$ that maximizes $\sum_{i\in S, j\in \overline{S}} w_{ij}$. The maximum cut is found by solving an integer QP : $\begin{matrix}
+    max \frac{1}{2} \sum_{i<j} w_{ij} (1-x_ix_j)\\
+    s.t. x_i \in \{-1,1\}\: \forall i=1,\cdots, n
+\end{matrix}$. The relaxation of the integer QP is then : $\begin{matrix}
+    max \frac{1}{2} \sum_{i<j} w_{ij} (1-v_i^Tv_j)\\
+    s.t. v_i \in \mathbb{R}^n,\: \lvert\lvert v_i\rvert\rvert_2 = 1 \: \forall i=1,\cdots, n
+\end{matrix}$. It is equivalent to the SDP : $\begin{matrix}
+    max \frac{1}{4} \sum_{i,j=1}^n w_{ij} (1- X_{ij})\\
+    s.t. X \in \: \mathbb{S}^n, \: X \geq 0, \: X_{ii} = 1 \: \forall i=1, \cdots, n
+\end{matrix}$ The SDP relaxes the max-cut problem (upper bound). \\
+Randomized rounding : \begin{enumerate}
+    \item Solve the SDP to find an optimal X
+    \item Construct $v_i \in \mathbb{R}^n, i=1, \cdots, n$ that are optimal by applying a Cholesky decomposition to X
+    \item Construct $r\in \mathbb{R}^n, \lvert\lvert r\rvert\rvert_2 = 1$ by drawing a sample from the uniform distribution on the unit sphere
+    \item Set $x_i = sign(r^Tv_i), i=1,\cdots,n$
+\end{enumerate}
+The expected value obtained via randomized rounding is : $LB = \sum_{i<j} w_{ij} \mathbb{P}_r (x_i \neq x_j)$ with $\mathbb{P}_r = \frac{\arccos(v_i^Tv_j)}{\pi}$. We get that the Lower Bound of the SDP is : $LB \geq 0.87 UB$ (where UB can be computed efficiently).\\
+
+\subsubsection{Polynomial optimization}
+\begin{theorem}
+    A monomial $x^\alpha$ for $x\in \mathbb{R}^n$ and $\alpha \in \mathbb{Z}_+^n$ is defined as $x^\alpha = x_1^{\alpha_1} \cdots x_n^{\alpha_n}$. 
+\end{theorem}
+
+For $\alpha \in \mathbb{Z}_+^n$ we define $\lvert \alpha \rvert = \sum_{i=1}^n \alpha_i$. Any sum over $\lvert \alpha \rvert \leq d$ will henceforth mean a sum over all $\alpha \in \mathbb{Z}_+^n$ satisfying the inequality. 
+
+\begin{theorem}
+    A polynomial in $x \in \mathbb{R}^n$ of degree d is a function $p(x) = \sum_{\lvert \alpha \rvert \leq d} p_\alpha x^\alpha$ such that $p_\alpha \neq 0$ for at least one $\alpha$ with $\lvert \alpha \rvert = d$. \\
+The polynomial p is naturally identified with its coefficient vector $p= (p_\alpha)_{\lvert \alpha \rvert \leq d}$. We denote the dimension of p by $s(n,d) = \begin{pmatrix}
+    n+d\\ d\\
+\end{pmatrix}$ which equals the number of possibilities to write d as a sum of $n+1$
+ nonnegative integers.
+\end{theorem}
+
+\begin{theorem}
+    A polynomial p in n variables is called nonnegative if $p(x) \geq 0 \: \forall x\in \mathbb{R}^n$. 
+\end{theorem}
+\warning A nonnegative polynomial must have an even degree.\\
+The goal is to minimize a polynomial p over all $x\in \mathbb{R}^n$. \\
+
+A polynomial p of even degree $d=2m$, $m\in \mathbb{Z}_+$ is called a sum-of-squares (SOS) if there exist polynomials $q_k$, $k=1,\cdots, K$ each of them having degree $\leq m$ such that $p(x) = \sum_{k=1}^K q_k(x)^2 \: \forall x\in \mathbb{R}^n$. \begin{theorem}Every nonnegative polynomial is SOS exactly if : $n=1$, $d=2$ or $n=2$ and $d=4$.\end{theorem}
+
+The vector of monomials up to degree m is given by : $z_m (x) = (1, x_1, \cdots, x_n, x_1^2, x_1x_2, \cdots, x_n^2, x_1^3, \cdots, x_n^m)^T \in \mathbb{R}^{s(n,m)}$.\\
+
+\begin{theorem}
+    A polynomial p(x) of even degree $d=2m$ is SOS if there exists $Q \in \mathbb{S}_+^{s(n,m)}$ with $p(x) = z_m (x)^T Q z_m(x)$ for all $x\in \mathbb{R}^n$.
+\end{theorem}
+
+Any polynomial $p(x) = \sum_{\lvert \alpha \rvert \leq 2m} p_\alpha x^\alpha$ can be written as $p(x) = z_m(x)^T Q z_m(x)$ for some symmetric matrix $Q\in \mathbb{S}^{s(n,m)}$. The elements Q must satisfy $p_\alpha = \sum_{\lvert \beta \rvert \leq m, \lvert \gamma \rvert \leq m, \beta + \gamma = \alpha} Q_{\beta \gamma} \: \forall \lvert \alpha \rvert \leq 2m$. System of s(n,2m) linear equations for Q, always feasible!\\
+We have the relation : \begin{center}
+    p(x) is non-negative for all x $\Leftarrow$ p(x) is SOS $\Leftrightarrow$ $\exists \: Q \in\mathbb{S}^{(n,m)} \: : Q \geq 0 $, $p_{\alpha} = \sum_{\lvert \beta\rvert \leq m, \lvert \gamma \rvert \leq m, \beta + \gamma = \alpha} Q_{\beta \gamma}  \: \forall \lvert \alpha \rvert \leq 2m$
+\end{center}
+
+Minimizing  non-convex polynomial of degree d=2m can be approximated by solving a convex SDP : \begin{equation}
+    min_{x\in \mathbb{R}^n} p(x) = \begin{matrix}max_{\tau \in \mathbb{R}} \tau\\
+    s.t. \: p(x)-\tau \geq 0 \: \forall x \in \mathbb{R}^n
+    \end{matrix} \geq \begin{matrix}
+        max_{\tau\in \mathbb{R}, Q\in \mathbb{S}^{(n,m)}} \tau\\
+        s.t. \: Q\geq 0, \: p_0-\tau = Q_{00}\\
+        p_{\alpha} = \sum_{\lvert \beta\rvert \leq m, \lvert \gamma \rvert \leq m, \beta + \gamma = \alpha} Q_{\beta \gamma}  \: \forall \lvert \alpha \rvert \leq 2m, \: \alpha\neq 0
+    \end{matrix}
+\end{equation}
+The approximation is exact for univariate polynomials (n=1), quadratic polynomials (d=2) and bivariate polynomials of degree 4 (n=2, d=4).\\
+
+\subsection{Robust optimization}
+Many optimization problems depend on parameters that are unknown; uncertain parameters. Sources of uncertainty : measurement errors (some parameters cannot be measured precisely), lack of perfect foresight (some parameters are unknown), implementation uncertainty (impossible to implement decisions exactly as intended). \\
+
+\quad \underline{Uncertainty sets :}\\
+Assume z is only known to belong to a compact convex uncertainty set $\mathcal{U}\subseteq \mathbb{R}^k$. The \textbf{robust counterpart} of an uncertain optimization problem minimizes the worst-case (maximum) cost over all decisions that satisfy the constraints for all uncertainty realizations. Therefore, RC : $\begin{matrix}
+    min_{x\in \mathbb{R}^n} \: max_{z\in \mathcal{U}} f_0(x,z)\\
+    s.t. \: max_{z\in \mathcal{U}} f_i(x,z) \leq 0 \: \forall i=1,\cdots, m
+\end{matrix}$
+RC is convex if P(z) is convex for every z. \\
+
+\quad \underline{Robust Linear Programs :}\\
+Assume the problem : $\begin{matrix}
+    min\: max\: a_0 (z)^T x + b_0(z)\\
+    s.t. \: max a_i(z)^T x + b_i(z) \leq 0 \: \forall i=1,\cdots, m
+\end{matrix}$. Where $a_i(z) = A_i z + a_i^0$ ($A_i \in \mathbb{R}^{n\times k}$, $a_i^0 \in \mathbb{R}^n$) and $b_i(z) = b_i^T z + b_i^0$ ($b_i \in \mathbb{R}^n$, $b_i^0 \in \mathbb{R}$). Assume also that the uncertainty set is polyhedral : $\mathcal{U} = \{z: Cz\leq d\}$ for some $C\in \mathbb{R}^{l\times k}$ and $d\in \mathbb{R}^l$.\\
+The dual of the problem is then : \begin{equation}
+    \begin{gathered}
+        max_{z\in \mathcal{U}} a_i(z)^T x + b_i(z) \leq 0 \Leftrightarrow \begin{matrix}
+            min_{\lambda_i \geq 0} d^T \lambda_i + (a_i^0)^T + b_i^0\\
+            s.t. \: C^T \lambda_i = A_i^Tx + b_i
+        \end{matrix}\Biggr\} \leq 0\\
+        \Leftrightarrow \exists \lambda_i \geq 0 \: : \begin{cases}
+            d^T \lambda_i + (a_i^0)^Tx + b_i^0 \leq 0\\
+            C^T \lambda = A_i^T x + b_i
+        \end{cases}
+    \end{gathered}
+\end{equation}
+
+The RC can then be reformulated as : $\begin{matrix}min_{x\in \mathbb{R}^n, \lambda_i\in \mathbb{R}^l}d^T \lambda_0 + (a_0^0)^Tx+ b_0^0\\
+s.t. \: d^T \lambda_i + (a_i^0)^Tx + b_i^0 \leq 0\\
+C^T \lambda_i = A_i^Tx + b_i\\
+\lambda_i \geq 0\\
+\end{matrix}$. It is equivalent to a polynomial-size LP.\\
+
+If we consider the uncertainty set ellipsoidal : $\mathcal{U} = \{z = \mu + Du : \lvert\lvert u \rvert\rvert_2 \leq 1\}$. Then the problem can be reformulated as : $\begin{matrix}
+    min_{x\in \mathbb{R}^n} \: \max_{z\in \mathcal{U}} a_o(z)^T x + b_0(z)\\
+    s.t. \: max_{z\in \mathcal{U}} a_i(z)^T x + b_i(z) \leq 0
+\end{matrix} \Leftrightarrow \begin{matrix}
+    min_{x\in \mathbb{R}^n} (A_0^T x + b_0)^T \mu + \lvert \lvert D^T A_0^T x + D^T b_0 \rvert\rvert_2 + (a_0^0)^Tx + b_0^0\\
+    s.t. \: (A_i^Tx +b_i)^T \mu + \lvert\lvert D^T A_i^T x + D^T b_i \rvert\rvert_2 + (a_i^0)^Tx + b_i^0 \leq 0
+\end{matrix}$.\\
+
+\subsubsection{Robust support vector machine}
+Minimize the worst-case empirical hinge loss wrt all possible perturbations $\delta \in \mathcal{U}$ of the training features. $min_{w,b} \: max_{\delta \mathcal{U}} \frac{1}{m} \sum_{i=1}^m max\{0,1-y_i(w^T(x_i+\delta_i)-b)\}$. Assume that $\mathcal{U}$ bounds the average norm of all perturbations : $\mathcal{U} = \{\delta = (\delta_1,\cdots, \delta_m) \in \mathbb{R}^m : \frac{1}{m} \sum_{i=1}^m\lvert\lvert\delta_i\rvert\rvert_2\leq \rho \}$\\
+\begin{theorem}
+    The worst-case hinge loss is upper bounded by the sum of the nominal hinge loss and the regularization term $\rho \lvert\lvert w \rvert\rvert_2$.
+\end{theorem}
+
+\begin{theorem}
+    If the training data is not linearly separable, then the worst-case hinge loss equals the sum of the nominal hinge loss and the regularization term $\rho \lvert\lvert w \rvert\rvert_2$.
+\end{theorem}
+
+The $l_2$-regularized SVM provides always an upper bound on the robust SVM. If there is no hyperplane that perfectly separates the training data, then the regularized SVM provides a lower bound on the robust SVM. \\
+
+If $\mathcal{U}$ is nonempty, compact and convex, while $f_i$ is convex in $x$ for every fixed z and concave in z for every fixed $x$, then the embedded maximization problems in the RC : \\$\begin{matrix}\min_{x\in\mathbb{R}^n} \max_{z\in\mathcal{U}} f_0(x,z)\\ s.t.\: \max_{z\in \mathcal{U}} f_i(x,z) \leq 0\end{matrix}$ can be eliminated by using techniques from conjugate duality. It can be reformulated as : $\begin{matrix}\min_{x\in \mathbb{R}^n, \mu_i \in \mathbb{R}^k} (-f_0)^*(x,\mu_0) + \sigma_U(-\mu_0) \\ s.t. \: (-f_i)^*(x,\mu_i) + \sigma_U(-\mu_i) \leq 0\end{matrix}$. The RC is equivalent to a polynomial-size convex optimization problem! The objective and all constraints are jointly convex in $x$ and $\mu_i$.\\
+
+\subsubsection{Dynamic robust optimization}
+Two types of decisions : Here-and-Now decisions $x_1$ are taken before observing $z$; Wait-and-See decisions $x_2$ are taken after observing $z$. We denote the set of all functions from $\mathcal{U}$ to $\mathbb{R}^{n_2}$ by $\mathcal{L}(\mathcal{U}, \mathbb{R}^{n_2})$. Linear dynamic robust optimization problems with fixed recourse can be expressed as :\\
+$\begin{matrix}
+    \min_{x_1\in\mathbb{R}^{n_1}, x_2\in \mathcal{L}(\mathcal{U}, \mathbb{R}^{n_2})} \max_{z\in\mathcal{U}} a_{01}^T x_1 + a_{02}^T x_2(z) + b_0(z)\\
+    s.t. \: \max_{z\in\mathcal{U}} a_{i1}^T x_1 + a_{i2}^T x_2(z) + b_i(z)\leq 0
+\end{matrix}$. This problem is NP-hard, even if they have fixed recourse and the uncertainty set is a polytope.\\
+Replace the wait-and-see decisions by \textbf{linear decision rules} : $x_2(z) = Wz + w$, $W \in \mathbb{R}^{n_2\times k}$ and $w \in \mathbb{R}^{n_2}$. \\
+\warning The linear decision rule restriction provides an \textbf{upper bound} on the original dynamic robust optimization problem. 
+
+\subsection{Stochastic Programming}
+Consider an optimization problem whose objective depends on a random variable $z\in \mathbb{R}^k$ with distribution $\mathbb{P}$. $P(z) = \inf_{x\in X} f(x,z)$. $P(z)$ is then not unique. To disambiguate the optimization problem under uncertainty, we need a decision criterion that maps random cost/loss functions to real numbers. \\
+
+\quad \underline{Portfolio optimization :}\\
+$z_i$ : rate of return, $x_i$ : \% of money invested in asset i, $x^Tz$ the rate of return of portfolio x. If we know $z$, we can easily solve the LP. Assume $z$ is normally distributed with mean value $\mu = \mathbb{E}[z] \in \mathbb{R}^n$ and the covariance matrix $\sum = \mathbb{E}[(z-\mu)(z-\mu)^T]\in \mathbb{S}_n^+$.\\
+Model 1 : minimize the expected portfolio loss $\begin{matrix}
+    \min \mathbb{E}[-z^Tx] = -\mu^T x\\
+    s.t. \: e^Tx =1, x\geq 0\\
+\end{matrix}$. This model behaves as if $z=\mu \Rightarrow$ no diversification.\\
+
+Model 2 : minimize the variance of the portfolio $\mathbb{V}[-x^Tz] = x^T\sum x$. Performs well in practice, but if $\exists z_i$ s.t $\sum_{ii} = 0$ then all the money is invested in this asset.\\
+
+Model 3 : minimize the mean-variance functional leads to the QP $\begin{matrix}
+    \min -\lambda \mu^Tx + (1-\lambda)x^T \sum x\\
+    s.t.\: e^Tx=1, x\geq 0\\
+\end{matrix}$ where $\lambda \in[0,1]$ encodes the risk-aversion. \\
+
+Model 4 : minimize the Value-at-Risk (VaR). The VaR at level $\varepsilon \in [0,1]$ is the left $(1-\varepsilon)$quantile of the loss : $VaR_\varepsilon (-x^Tz) = \inf_y \{ y : \mathbb{P}(-x^Tz \leq y) \geq 1-\varepsilon\}$. As $z$ follows a normal distribution, $-x^Tz$ follows a normal distribution $\mathcal{N}(-x^T\mu, x^T \sum x)$. Thus, $\frac{x^T(\mu-z)}{\sqrt{x^T\sum x}}$ follows a normal distribution $\mathcal{N}(0,1)$. $\Phi$, the standard normal distribution function and $q_\alpha = \Phi^{-1}(\alpha)$ its $\alpha$quantile. Thus $\mathbb{P}(-x^Tz\leq y) \Leftrightarrow y \geq -x^T\mu + q_{1-\varepsilon} \sqrt{x^T\sum x}$. Then, for $\varepsilon\leq \frac{1}{2}$ : $\begin{matrix}
+    \min y\\
+    s.t. \: e^Tx = 1, x\geq 0\\
+    y\geq -x^T \mu + q_{1-\varepsilon} \sqrt{x^T\sum x}
+\end{matrix}$ \warning For non-elliptical distributions, quantile/VaR optimization problems are non-convex. \\
+
+\quad \underline{Conditional Value at Risk (CVaR) :}\\
+The CVaR at level $\varepsilon \in [0,1]$ of a random variable L is defined as : $CVaR_\varepsilon = \inf_{\beta\in \mathbb{R}} \beta + \frac{1}{\varepsilon} \mathbb{E}[\max\{L-\beta,0\}]$.\\
+\begin{theorem}
+    If L has a continuous distribution, then CVaR${}_\varepsilon$ is the conditional expectation of L above VaR${}_\varepsilon$(L). 
+\end{theorem}
+\warning If L is discrete ($\mathbb{P}(L=L_i) = p_i$, where $p_i > 0$, $\sum p_i=1$), then the CVaR is computed by solving an LP ($\tau_i = \max\{L_i-\beta,0\}$) : $CVaR_\varepsilon(L) = \begin{matrix}
+    \min \beta + \frac{1}{\varepsilon} \sum p_i\tau_i\\
+    s.t.\: \beta \in \mathbb{R}_i, \tau_i \in \mathbb{R} \: \forall i=1,\cdots, m\\
+    \tau_i\geq 0, \tau_i \geq L_i-\beta\\
+\end{matrix}$. 
+
+
+\end{document}

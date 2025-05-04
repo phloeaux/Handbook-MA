@@ -1,0 +1,171 @@
+
+\documentclass[../main.tex]{subfiles}
+\graphicspath{{\subfix{../IMAGES/}}}
+
+\begin{document}
+\localtableofcontents
+
+\subsection{Recall}
+\subsubsection{Signals}
+\begin{itemize}
+    \item Energy : $E = \sum_{n=-\infty}^\infty \lvert x[n] \rvert^2$ (discrete) or $E = \int_{-\infty}^\infty \lvert x(t) \rvert^2dt$ (continuous)\\
+    \item Power : $P = \lim_{N\rightarrow} \frac{1}{2N+1} \sum_{n=N}^N \lvert x[n] \rvert^2 = \lim_{t \rightarrow \infty} \frac{1}{2T} \int_{-\infty}^\infty \lvert x(t) \rvert^2dt$\\
+\end{itemize}
+\warning If the energy value of the signal is finite, the signal is an energy signal otherwise it is a power signal.\\
+
+The signal can be : \begin{itemize}
+    \item Periodic : $x[n] = x[n+N]$, $x(t) = x(t+T)$\\
+    \item Even : $x[n] = x[-n]$, $x(t) = x(-t)$\\
+    \item Odd : $x[n] = -x[n]$, $x(t) = -x(t)$\\
+\end{itemize}
+It can have a time-shift and a time-scalling.\\
+
+\subsubsection{Systems}
+\begin{theorem}
+    The system is linear if $\forall \: a_1, a_2, x_1(t), x_2(t)$ we have : $H(a_1 x_1(t) + a_2 x_2(t)) = a_1 H(x_1(t)) + a_2 H(x_2(t))$.
+\end{theorem}
+
+ \begin{theorem}
+     The system is time invariant if $\forall \tau, x(t)$ we have : $y(t) = H(x(t)) \Rightarrow y(t-\tau) = H(x(t-\tau))$
+ \end{theorem}
+
+ \begin{theorem}
+     The system is stable if for $\lvert x(t) \rvert \leq B$ then $H(x(t)) \leq B_o$
+ \end{theorem}
+
+\subsubsection{LTI systems}
+In discrete time, the impulse is given by : $\delta[n] = \begin{cases}
+    1 & n=0\\
+    0 & \text{otherwise}\\
+\end{cases}$
+
+In continuous time, we use the dirac function $\delta(t) = \begin{cases}
+    \infty & t=0\\
+    0 & \text{otherwise}\\
+\end{cases}$
+
+The convolution is given by : \begin{equation}
+    \begin{gathered}
+        y(t) = x(t) * h(t) = \int_{-\infty}^\infty x(\tau) \delta(t-\tau) d\tau\\
+        y[n] = x[n] * h[n] = \sum_{k=-\infty}^\infty x[k] h[n-k]\\
+    \end{gathered}
+\end{equation}
+
+The convolution : \begin{itemize}
+    \item commutative : $x(t) * h(t) = h(t) * x(t)$\\
+    \item distributivity : $x(t) *(h_1(t) + h_2(t)) = x(t) * h_1(t) + x(t) * h_2(t)$\\
+    \item associativity : $(x(t) * h_1(t)) * h_2(t) = x(t) * (h_1(t)*h_2(t))$\\
+\end{itemize}
+
+\quad \underline{Composition :}\\
+
+\begin{itemize}
+    \item Series : if all LTI, the global is LTI ($h(t) = h_1(t)* h_2(t))$\\
+    \item Parallel : if all LTI, the global is LTI ($h(t) = h_1(t) + h_2(t))$\\    
+\end{itemize}
+\warning The same goes for discrete values.\\
+
+\begin{itemize}
+    \item Memory less system : the output at time t only depends on the input at the same time t, $h(t) = a \delta(t), a\in \mathbb{R}$\\
+    \item Causal system : $h(t) = 0 \forall t<0$\\
+    \item Stable system : $\int_{-\infty}^\infty \lvert h(t) \rvert dt < \infty$\\
+\end{itemize}
+
+ To solve a differentiable equation, we can first use the decomposition into homogeneous and particular solution : $\frac{dy(t)}{dt} + 2y(t) = x(t) \Rightarrow y(t) = y_p(t) + y_h(t)$, $y_h(t) = Ae^{st} \Rightarrow s = -2$, with $x(t) = Ke^{3t} u(t)$ then $y_p(t) = Ye^{3t} \Rightarrow Y = \frac{K}{5}$. For the problem to be causal we need to impose the initial rest (if $x(t) = 0, t\leq 0 \Leftrightarrow y(t) = 0, t\leq 0$) which gives $y(t) = \frac{K}{5} (e^{3t} - e^{-2t})$\\
+
+ \subsection{Fourier transform}
+\quad \underline{Continuous :}\\
+\begin{equation}
+    \begin{gathered}
+        X(\omega) = \int_{-\infty}^\infty x(t) e^{-j\omega t} dt\\
+        X(f) = \int_{-\infty}^\infty x(t) e^{-2\pi f t}dt\\
+        x(t) = \frac{1}{2\pi} \int_{-\infty}^\infty X(\omega) e^{j\omega t}d \omega
+    \end{gathered}
+\end{equation}
+
+We can define : $sinc(\pi \alpha) = \frac{\sin(\pi \alpha)}{\pi \alpha}$.\\
+
+\begin{itemize}
+    \item $b(t) = \begin{cases}
+        1 & \lvert t \rvert \leq 1\\
+        0 & \\
+    \end{cases} \Rightarrow B(\omega) = 2 sinc(\frac{\omega}{\pi})$
+    \item $x(t) = e^{-at} u(t)$, $a\in \mathbb{C} \Rightarrow X(\omega) = \begin{cases}\frac{1}{a+j\omega} & \Re(a)>0\\
+    0
+    \end{cases}$
+    \item $x(t) = \delta(t-t_0) \Rightarrow X(\omega) = e^{-j\omega t_0}$
+    \item $x(t) = e^{j\omega_0 t} \Rightarrow X(\omega) = 2\pi \delta(\omega- \omega_0)$
+    \item $x(t) = A\cos(\omega t) \Rightarrow X(\omega) = \pi A [\delta(\omega + \omega_0) + \delta(\omega - \omega_0)]$
+\end{itemize}
+
+ \quad \underline{Properties :}\\
+ $x(t) \Rightarrow X(\omega)$
+ \begin{itemize}
+     \item Time shift : $y(t) = x(t-t_0) \Leftrightarrow Y(\omega) =  e^{-j\omega t_0}X(\omega)$
+     \item Differentiation : $y(t) = \frac{d x(t)}{dt} \Leftrightarrow Y(\omega) = j\omega X(\omega)$
+     \item Convolution : $y(t) = x(t) * h(t) \Leftrightarrow Y(\omega) = X(\omega) H(\omega)$
+ \end{itemize}
+
+ \quad \underline{Discrete time (digital system):}\\
+ \begin{equation}
+ \begin{gathered}
+     X(\omega) = \sum x[n] e^{-j\omega n}\\
+     x[n] = \frac{1}{2\pi} \int_{-\infty}^\infty X(\omega) e^{j \omega n} d\omega
+     \end{gathered}
+ \end{equation}
+
+ \quad \underline{Properties :}\\
+\begin{itemize}
+    \item $X(\omega + 2\pi k) = X(\omega)$
+    \item $x[n-n_0] \Leftrightarrow e^{-j \omega n_0} X(\omega)$
+    \item $y[n] = x[n] * h[n] \Leftrightarrow Y(\omega) = X(\omega) H(\omega)$
+    \end{itemize}
+
+\begin{itemize}
+    \item $x[n] = \begin{cases}
+        1 & -\frac{N-1}{2}\leq n \leq \frac{N-1}{2}\\
+        0
+    \end{cases} \Rightarrow X(\omega) = e^{j \omega \frac{N-1}{2}} \frac{1-e^{-j\omega N}}{1-e^{-j\omega}} = \frac{\sin(\omega N/2)}{\sin(\omega/2)}$
+    \item $x[n] = a^n u[n] \Rightarrow X(\omega) = \frac{1}{1-ae^{-j\omega}}$
+\end{itemize}
+
+If $x(t) = e^{j\omega_0 t}$ (a pure frequency), then $y(t) = e^{j\omega_0 t} H(\omega_0) = \lvert H(\omega_0 )\rvert e^{j\omega_0 (t + \frac{\arg H(\omega_0)}{\omega_0})}$, H then only acts as an amplitude factor of the input.\\
+
+In continuous model, a low pass has a TF $H$ that has a magnitude of 1 from $-\omega_c$ to $\omega_c$ and an $\arg(H)$ with a linear slope between $-\omega_c$ and $\omega_c$. A high pass filter has the opposite characteristics.\\
+
+\subsubsection{Sampling}
+ We have $x_p[n] = x(nT) = x(t) \delta_T(t)$ with T the sampling time and $\delta_T(t) = \sum_{n=-\infty}^\infty \delta(t-nT)$ the dirac function. We have that $\delta(\omega) = \frac{2\pi}{T} \sum_{k=-\infty}^\infty \delta(w-\frac{2\pi k}{T})$. \\
+Then $X_p(\omega) = \frac{1}{T} (X(\omega) * \delta_{1/T}(\omega))$\\
+
+\begin{theorem}
+    Shannon's theorem states that the sampling frequency should be at least twice the frequency of the signal we want to analyse : \begin{equation}
+        \omega_s > 2 \omega_M
+    \end{equation}
+    With $\omega_M$ the maximum frequency of the signal.
+\end{theorem}
+
+If $\omega_s<2\omega_M$, we might get some aliasing or overlapping of frequencies. \\
+To reconstruct the signal, we can multiply the Fourier signal by a rectangular window (of size $\omega_s/2$) which in the time domain generates a sinc function. By doing so, the discrete points remains with the same value and we can approximate the values in between (or have them exactly if the sinc is infinite which is not doable in practice).\\
+
+\subsection{Laplace transform}
+ From Fourier, we replace $j \omega$ with $s = a + j\omega$.\\
+ Then : $X(s) = \int_{-\infty}^\infty x(t) e^{-st} dt$.\\
+ The link between Fourier and Laplace is : $FT\{x(t) e^{-\alpha t}\} = H(s)$\\
+
+ A system is causal if the region of convergence (region where the integral converges) is located on the right of the pole. If the pole $a<0$ then the system is stable.
+
+If a function is absolutely integrable, then its Fourier transform exists and the RoC must contain the origin.
+
+A system is :
+\begin{itemize}
+    \item causal if the RoC is the plane right of the rightmost pole
+    \item stable if the RoC contains the imaginary axis
+    \item causal and stable if all poles lies in the left of the s-plane and the RoC lies in the right of the rightmost pole \warning the relation is reciprocal ONLY IF $H(s) = \frac{P(s)}{Q(s)}$, otherwise it does not necessarily hold
+\end{itemize}
+
+
+
+
+
+
+\end{document}

@@ -1,0 +1,519 @@
+\documentclass[../main.tex]{subfiles}
+\graphicspath{{\subfix{../IMAGES/}}}
+
+\begin{document}
+\localtableofcontents
+
+\subsection{Recall}
+\begin{itemize}
+    \item The change in enthalpy of the reaction is given by the difference of enthalpy between the products and the reactant : $\Delta H = H_p - H_r$ (if positive : endothermal and requires energy to go from left to right, else : exothermal)\\
+    \item The change in entropy of the reaction is given by the difference of entropy between the products and the reactant : $\Delta S = S_p - S_r$\\
+    \item The Gibbs free energy of the overall reaction is : $\Delta G = \Delta H - T \Delta S$ (if positive, does not start spontaneously and requires energy)\\
+    \item The driving voltage to start the reaction : $\Delta E^\circ = E_{reduction}^\circ + E_{oxydation}^\circ$\\
+    \item $\Delta G^\circ = -ZF \Delta E^\circ$, with Z the number of charges exchanges and F the Faraday constant ($F = 96484 C/mol$)\\
+    \item Faraday's law : $n = \frac{It}{ZF}$, n the number of moles.\\
+\end{itemize}
+
+\warning A corrosion reaction is a special case where electrochemical reactions take place on the same electrode.\\
+The reduction ($2H^+ + 2e \rightarrow H_2$) happens at the cathode. The oxidation ($Fe \rightarrow Fe^{2+} + 2e$) happens at the anode.\\
+
+Faraday's law : \begin{equation}
+    \begin{gathered}
+        \frac{dm}{dt} = \frac{IM}{nF}\\
+        i = \frac{I}{A} (\text{current density})\\
+        n_m = \frac{i}{nF} (\text{number of moles per unit surface and per unit time})\\
+        m_r = \frac{iM}{nF} (\text{mass loss/gain per unit surface and per unit time})\\
+        d_r = \frac{iM}{nF\rho} (\text{reacted depth per unit time})
+    \end{gathered}
+\end{equation}
+With \begin{itemize}
+    \item m : mass of reacted substance (g)
+    \item t : time (s)
+    \item I : current (A)
+    \item F : Faraday constant (96485 C$mol^{-1}$)
+    \item M : molar mass of the substance $(g/mol)$
+    \item n : stoichiometric coefficient of the electrons in the reaction
+\end{itemize}
+
+\subsection{Electrode potential}
+The more positive the reduction potential ($E^\circ$), the more favorable the reduction reaction. The oxidation potential is just the reverse reaction, which has the opposite sign ($E_{oxidation} = -E_{reduction}$)\\
+
+Reduction potential is measured relative to a reference reaction : Standard Hydrogen Electrode (SHE) $2H^+ + 2e^- \rightarrow H_2$, $E^\circ = 0V$.\\
+
+At equilibrium, we have $E_{rev} = -\frac{\Delta G}{nF}$.\\
+The Nernst equation is given by : \begin{equation}
+    \begin{gathered}
+        \sum \nu_{ox,i} B_{ox,i} + ne^- = \sum \nu_{red,i} B_{red,i}\\
+        E_{rev} = E^0 + \frac{RT}{nF} \ln (\Pi \frac{a_{ox,i}^{\nu_{ox,i}}}{a_{red,i}^{\nu{ox,i}}})\\
+    \end{gathered}
+\end{equation}
+With \begin{itemize}
+    \item $E^0$ the reversible potential at one atm
+    \item $B_{ox}$ species at oxidized state
+    \item $B_{red}$ species at reduced state
+    \item $\nu$ stoichiometric coefficient
+    \item $a$ activity or concentration with $a= \gamma_i \frac{c_i}{c_0}$, $\gamma_i$ the activity coefficient (often 1), $c_i$ the concentration of species i and $c_0$ the reference concentration (1M)
+\end{itemize}
+
+Standard conditions are as follow : \begin{itemize}
+    \item Activities of solutes : 1M
+    \item Pressure of gases : 1atm
+    \item Temperature : $25^\circ C$
+\end{itemize}
+
+To compute the Gibbs free reaction enthalpy, we have : $\Delta H_r(T) = \sum \nu_{prod} \Delta H_f(T) + \sum \nu_{reac} \Delta H_f(T)$ with $\Delta H_f(T) = \Delta H_f^0 + \int C_p(T)dT$. For the entropy, we have $\Delta S_r(T) = \sum \nu_{prod} \Delta S_f(T) + \sum \nu_{reac} \Delta S_f(T)$ with $\Delta S_f(T) = \Delta S_f^0 + \int \frac{C_p(T)}{T}dT$
+
+\subsection{Charge transfer limitation}
+Electric current (i or j) is the flow of electric charge. \begin{itemize}
+    \item i : current in A or $C/s$
+    \item j : current density in A/surface area
+\end{itemize}
+
+\quad \underline{Sign convention :} Electrons always flow from anode to cathode. Current always flow in the opposite direction. \\
+
+\textbf{Galvanostat :} current source that forces a selected current I to pass from the working electrode WE to the counter electrode CE. The resulting potential E is measured using a reference electrode RE. \\
+\textbf{Potentiostat :} electronic device that maintains a selected potential E between RE and WE by passing an appropriate current I between WE and CE.\\
+
+Let L the distance between WE and the capillary of the RE, we have $E_{measured} = E + \Delta \Phi_\Omega$, $\Delta \Phi_\Omega = \frac{iL}{\kappa}$, $\kappa$ is the electrolyte conductivity.\\
+
+\subsubsection{Non equilibrium conditions}
+\begin{enumerate}
+    \item Apply more positive potentials to the WE relative to the RE. Flow of electrons is from the solution into the electrode. Potential of RE remains the same.
+    \item Apply more negative potentials to the WE relative to the RE. Flow of electrons from the electrode to the solution.
+\end{enumerate}
+
+The additional potential needed to drive a reaction at a certain rate is called the overpotential.\\
+
+In the absence of high overpotentials, we have : \begin{itemize}
+    \item when an electrode is moved from its open-circuit value towards more negative potentials, the substance reduced first has the least negative $E^\circ$
+    \item When an electrode is moved from its open-circuit value towards more positive potentials,  the substance oxidized first has the least positive $E^\circ$
+    \item Small quantities of an added substance may contribute an additional peak
+\end{itemize}
+
+\quad \underline{Butler-Volmer law :}\\
+Apply a bias relative to a RE : current flow.\\
+
+Forward reaction : rate $k_f$ increases as electrode becomes more positive.\\
+\begin{equation}
+    rate_f = k_f [R]_s = \frac{i_a}{zFA} = \frac{j_a}{zF}
+\end{equation}
+Where ${}_f$ refers to the forward reaction, $[R]_s$ the surface concentration and ${}_a$ the anode.\\
+
+The net rate is then given by : $rate_{net} = rate_f - rate_r = \frac{j}{zF} = k_f [R]_s - k_r [O]_s$.
+At equilibrium : $\ln k_f - \ln k_r = \ln \frac{[O]_s}{[R]_s}$. Finally : \begin{equation}
+    k_f = k_f^\circ e^{\frac{\alpha_a zF}{RT} (E-E^\circ)}
+\end{equation}
+
+With $\alpha_a = \frac{d}{dE} [\frac{RT}{zF} \ln k_f]$.\\
+
+$k^\circ$ is a frequency factor. We can apply a large potential E to maintain a higher k for a small given value of $k^\circ$. \\
+We can also derive $k_r = k_r^\circ e^{-\frac{(1-\alpha_a) zF}{RT}(E-E^\circ)}$.\\
+
+\textbf{The Butler-Volmer equation} is then : \begin{equation}
+    j = zFk^\circ [[R]_s e^{\frac{\alpha_a zF}{RT}(E-E^\circ)} - [O]_s e^{-\frac{(1-\alpha_a)zF}{RT}(E-E^\circ)}] = j^\circ [e^{\alpha_a f \eta} - e^{-(1-\alpha_a) f \eta}]
+\end{equation}
+WIth $j^\circ = zF k^\circ [R]^{1-\alpha} [O]^\alpha = zFk^\circ [C]$ when $[O] = [R] = [C]$, $f= \frac{zF}{RT}$, $\eta = E - E^\circ$ the overpotential.
+
+At equilibrium, $j=0$ and we get the Nernst equation. 
+
+An ideal polarizable electrode is an electrode at which no charge transfer occurs across the metal-solution interface, regardless of the potential imposed.
+
+
+For a very small overpotential $\eta$, we have $\frac{j}{j^\circ} = f\eta$ or in other terms $V = iR$ with the charge transfer resistance $R_{ct} = \frac{RT}{zF \lvert i^\circ \rvert}$.
+
+For a very large overpotential $\lvert \eta \rvert >> \frac{RT}{zF}$, we have $\frac{j}{j^\circ} = e^{\alpha_a f \eta}$. For the anode : $\eta = -\frac{RT}{zF\alpha_a} \ln j^\circ + \frac{RT}{zF\alpha_a} \ln j$. For the cathode : $\eta = -\frac{RT}{zF(1-\alpha_a)} \ln \lvert j \rvert + \frac{RT}{zF(1-\alpha_a)} \ln \lvert j^\circ \rvert$.\\
+
+
+
+\subsection{Battery}
+Lithium-ion batteries : \begin{itemize}
+    \item Lithium Nickel Manganese (NMC) - positive electrode
+    \item Lithium Nickel Cobalt Aluminum (NCA) - positive electrode
+    \item Lithium Iron Phosphate (LFP) - positive electrode
+    \item Lithium Titanate (LTO) - negative electrode
+\end{itemize}
+
+\begin{itemize}
+    \item Primary cells : it is a battery designed to be used once and discarded
+    \item Secondary cell : it is a type of battery which can be charged and discharged many times
+\end{itemize}
+
+The collector is a conductive material that collects the current generated by the electrochemical reactions occurring at the electrodes. Separator mare of a porous material that allows for the passage of ions.\\
+
+In capacitors, the voltage decreases linearly at a constant discharge current. In batteries the extracted charge is supplied via the electrodes by an electrochemical reaction. The voltage does not follow a linear decreasing trend.
+
+Cells are the smallest individual electrochemical unit and deliver a voltage that depends on the cell chemistry. Batteries modules and packs are made up from groups of cells connected in series and parallel.\\
+
+The capacity has a linear relationship with the available amount of electrode material. Voltage of the battery during discharge is always lower than the open circuit voltage. Voltage of the battery when charging is always higher than the open circuit. Deviation from the open circuit voltage are losses. \\
+
+\begin{itemize}
+    \item Cell nominal voltage depends on the combination of active chemicals used in the cell
+    \item Cell nominal capacity specifies the quantity of charge, in Ampere hours that the battery is rated to hold
+\end{itemize}
+
+The C rate is a relative measure of cell current. It is the constant current charge/discharge rate that the cell can sustain for one hour. It is the time taken to charge the cell.\\
+The total energy storage capacity of a cell is the nominal voltage multiplied by its nominal capacity.\\
+
+\subsubsection{Efficiency}
+\begin{itemize}
+    \item Capacity efficiency : $L = \frac{Q_{discharge}}{Q_{charge}} \simeq 99.99\%$
+    \item Energy efficiency : $\eta = \frac{E_{discharge}}{E_{charge}}$
+\end{itemize}
+
+The \textbf{state of charge} is a percentage value that expresses the remaining charge Q. It cannot be measured : $SoC = \frac{Q_{actual}}{Q_{full}} = SoC (0) + \frac{1}{C_{nom}} \int_0^t Idt$.\\
+
+A Li-ion battery should be charged with constant current and constant voltage.\\
+
+\subsubsection{Battery safety}
+
+Increasing the temperature triggers an exothermic reaction which creates heat which in turns accelerates the reaction.\\
+When charging at high SoC, we might get lithium plating (happens when the anode goes below 0V).\\
+Li-ion batteries have a limited region of safe operation. \\
+
+\quad \underline{BMS functions :}\\
+It prevents overcharging, discharging... Accurate cell voltage, current and temperature measurements. \\
+SoC estimation by ECM : it consists of 4 models \begin{itemize}
+    \item open circuit voltage
+    \item hysterisis
+    \item diffusion voltage
+    \item Ohmic resistance
+\end{itemize}
+
+We can also use a physics bases battery model (PBM) : \begin{itemize}
+    \item pseudo-2D PBS model
+    \item based on multiphase porous electrodes and concentrated solution theories
+    \item governed by a set of coupled non linear PDE
+\end{itemize}
+
+For Li-ion, when $SoH < 0.8$, the battery is considered at EoL. \\
+
+2 types of aging : \begin{itemize}
+    \item Cyclic aging (function of SoC, temperature, level of discharge)
+    \item Calendar aging (function of SoC, temperature)
+\end{itemize}
+
+The higher the temperature, the faster we lose capacity and low temperature also accelerate the aging process especially during charging.\\
+
+\subsection{Mass transfer limitation}
+Once we entered into high current, mass transfer limitation has a role to play and limit the current and B-V equation does not predict well anymore.\\
+
+In reality, the surface concentration is less than the bulk concentration in case of a reactant and more in the case of a product.\\
+The flux NA of species A normal to the electrode surface is given by : $N_A = -D_A \frac{C_{A,bulk} - C_{A,surf}}{\delta} (mol/m^2s)$ with $D_A$ the coefficient of diffusion $(m^2/s)$ and 
+$\delta$ the thickness of Nernst diffusion layer.\\
+
+The limiting case appear when $C_{s} = 0$. We then have $i_L = n F N_{max} = -nFD c_{bulk} / \delta$ and \begin{equation}
+    i = i_L (1- e^{2F/ RT\eta}) = i_L (1- \frac{c_s}{c_b})
+\end{equation}
+
+\quad \underline{Mixed control :}\\
+We can have mass transport and butler-volmer behavior at the same time : $i_c = -\frac{(i_0/i_L) e^{-\eta/\beta_c}}{1-(i_0/i_L) e^{-\eta/\beta_c}}$\\
+The relation between J and j is as follow $j = J zF = \frac{D}{\delta} \Delta C z F$.\\
+$j = k_m ([C^*]-[C_s]) zF$\\
+Then, $j_{lim} = k_m [C^*] zF$, $C^*$ bulk concentration, $k_m = \frac{D}{\delta}$.\\
+\begin{itemize}
+    \item if $k^\circ>> k_m$ j-V curves are controlled by mass transport
+    \item if $k_m>>k^\circ$ j-V curves are controlled by kinetics
+\end{itemize}
+
+B-V model with mass transport limitations : \begin{equation}
+    \frac{j}{j^\circ} = (1-\frac{j}{j_{lim,a}}) e^{\frac{\alpha_a zF}{RT} \eta'} - (1-\frac{j}{j_{lim,c}}) e^{\frac{-(1-\alpha_a) zF}{RT} \eta'}
+\end{equation}
+
+\quad \underline{Small $\eta$ :}\\
+
+By linearizing the B-V equation, for small $\eta'$, we have : $\eta' = \frac{j}{f} [\frac{1}{j^\circ} + \frac{1}{j_{lim,a}} - \frac{1}{j_{lim,c}}] = j [R_{ct} + R_{mt,a} + R_{mt,c}]$ with : \begin{itemize}
+    \item Charge transfer resistance $R_{ct} = \frac{RT}{j^\circ z F}$
+    \item mass transfer resistance at anode $R_{mt,a} = \frac{RT}{j_{lim,a} zF}$
+    \item at cathode $R_{mt,c} = \frac{RT}{\lvert j_{lim,c}\rvert zF}$
+\end{itemize}
+
+\quad \underline{Large $\eta$ :}\\
+
+The result can be written in two forms : \begin{itemize}
+    \item Anodic ($\eta >0$) : \begin{itemize}
+        \item Tafel plot form $\eta = \frac{RT}{\alpha_a zF} \ln \frac{j_{lim,a}}{j^\circ} +  \frac{RT}{\alpha_a zF} \ln \frac{j}{j_{lim,a}-j}$
+        \item Overpotential form : $\eta =  \frac{RT}{\alpha_a zF} \ln \frac{j_{lim,a}}{j_{lim,a}-j} +  \frac{RT}{\alpha_a zF} \ln \frac{j}{j^\circ}$
+    \end{itemize}
+    \item Cathode ($\eta <0$) : \begin{itemize}
+        \item Tafel plot form $\eta = \frac{RT}{(1-\alpha_a) zF} \ln \frac{j^\circ}{j_{lim,c}} +  \frac{RT}{(1-\alpha_a) zF} \ln \frac{j_{lim,c}-j}{j}$
+        \item Overpotential form : $\eta =  \frac{RT}{(1-\alpha_a) zF} \ln \frac{j-j_{lim,c}}{j_{lim,c}} +  \frac{RT}{(1-\alpha_a) zF} \ln \frac{j^\circ}{j}$
+    \end{itemize}
+\end{itemize}
+
+Then, $\eta_{total} = \sum \lvert \eta_{individual} \rvert$ and $E_{overall} = E_{eq} + \lvert \eta_{total} \rvert$.\\
+
+\begin{itemize}
+    \item For low $j$ ($j<< j_{lim}$), $\eta_{act}$ dominates ($E_{overall} = E_{eq} - \lvert \frac{RT}{(1-\alpha_a) zF} ln \frac{\lvert j^\circ \rvert}{\lvert j\rvert} \rvert - \lvert \frac{RT}{z\alpha_a F} \ln \frac{j}{j^\circ} \rvert$)
+    \item Higher $j$ $\eta_{ohm}$ dominates ($E_{overall} \simeq E_q - cte - j AR_{ohm}$)
+    \item Highest $j$ ($j>> j_{lim}$) $\eta_{conc}$ dominates ($E_{overall} = E_{eq}-cte - \lvert \frac{RT}{(1-\alpha_a) zF} ln \frac{\lvert j-j_{lim,c} \rvert}{\lvert j_{lim,c} \rvert} \rvert - \lvert \frac{RT}{z\alpha_a F} \ln \frac{j_{lim,a}}{j_{lim,a} - j} \rvert$)
+\end{itemize}
+
+We also have : \begin{itemize}
+    \item $\eta_{conc,c} = \frac{RT}{(1-\alpha_a) zF} \ln \frac{\lvert j-j_{lim,c} \rvert}{\lvert j_{lim,c} \rvert}$
+    \item $\eta_{act,c} = \frac{RT}{(1-\alpha_a) zF} \ln \frac{\lvert j^\circ \rvert}{\lvert j \rvert}$
+    \item $\eta_{conc,a} = \frac{RT}{\alpha_a zF} \ln \frac{j_{lim,a} }{ j_{lim,a}-j}$
+    \item $\eta_{act,a} = \frac{RT}{\alpha_a zF} \ln \frac{j}{j^\circ}$
+    \item $\eta_{ohm} = jAR_{ohm}$
+\end{itemize}
+
+Modes of Mass transport : \begin{itemize}
+    \item Diffusion : movement of a species under the influence of a gradient of chemical potential
+    \item Migration : movement of a charged species under the influence of an electric field
+    \item Convection : stirring or hydrodynamic transport
+\end{itemize}
+
+The flux is then expressed as : $J_i(x) = -D_i \frac{\partial C_i(x)}{\partial x} - \frac{z_i F}{RT} D_iC_i \frac{\partial \phi}{\partial x} + C_i v(x)$ with $J_i$ the flux of species i at a distance x from the surface (mol $s^{-1} cm^{-2}$), $D_i$ the diffusion coefficient, $z_i$ the charge of species i, $C_i$ the concentration of species i and $v$ the velocity with which a volume element in solution moves along the axis.\\
+
+\quad \underline{Mass transporrt without convection :}\\
+The mass transfer is governed by the Nernst-Planck equation. At any location in solutionm the total current is the summ of all contributions from all species i. The relative contributions of diffusion and migration to the flux of a species differ for different locations in solution. Far from the electrode, migration plan a dominant role.\\
+
+In the bulk solution, total current is carried mainly by migration of all charged species. \\
+Let's denote $u_i$ the mobility of a species i (it is the ability of a charged particle to move through a medium in response to an electric field : $u_i = \frac{\lvert z_i \rvert FD_i}{RT} [m^2 /Vs]$.\\
+Then $j_{m,i} = \frac{\lvert z_i \rvert F u_i C_i \Delta E}{L}$ or $\frac{\partial \phi}{\partial x} \simeq \frac{\Delta E}{L}$.\\
+
+The \textbf{transference number} $t_i = \frac{j_i}{j}$ of species i is the fraction of the total migration current that a given ion i carries.\\
+Sign convention : \begin{itemize}
+    \item Diffusion current ($j_d$) : Oxidized species diffuses to cathode and reduced species diffuses to anode
+    \item Migration current ($j_m$) : cation migrates to cathode and anion migrates to anode
+\end{itemize}
+
+\quad \underline{Linear diffusion approximation :}\\
+$D_O \frac{[O]^* - [O]_s}{\delta}$.\\
+\begin{enumerate}
+    \item R initially absent : $[O]_s = \frac{j-j_{lim,c}}{k_{mO} zF}$, $[R]_s = \frac{-j}{k_{mR} zF}$
+    When $j = j_{lim,c}/2$, we have $E_{1/2} = E^\circ_{cell,T} - \frac{RT}{zF} \ln \frac{k_{mO}}{k_{mR}}$ or $E_{cell} = E_{1/2} + \frac{RT}{zF} \ln \frac{j-j_{lim,c}}{-j}$
+
+    \item O and R are initially present : $E_{cell} = E^\circ_{cell,T} - \frac{RT}{zF} \ln \frac{k_{mO}}{k_{mR}} + \frac{RT}{zF} \ln \frac{j-j_{lim,c}}{j_{lim,a} - j}$
+
+    \item R is insoluble : $E_{cell} = E^\circ_{cell,T} + \frac{RT}{zF} \ln [O]^* + \frac{RT}{zF} \ln \frac{j_{lim,c} - j}{j_{lim,c}}$
+\end{enumerate}
+
+\quad \underline{Transient response :}\\
+Consider the diffusion layer thickness to e a time-dependent response : $\frac{j}{zF} = D\frac{[O]^* - [O]_s}{\delta(t)}$.\\
+
+\begin{equation}
+    \frac{j}{zF} = \sqrt{\frac{D_o}{4t}} ([O]^* - [O]_s)
+\end{equation}
+
+\subsubsection{Diffusion-limited case}
+
+\begin{equation}
+    \begin{gathered}
+        J_i = - D_i \nabla C_i\\
+        \frac{\partial C_i}{\partial t} = D_i \nabla^2 C_i
+    \end{gathered}
+\end{equation}
+
+With more complex math, we get $j = \sqrt{\frac{D_o}{\pi t}} ([O]^* - [O]_s) zF$.
+
+\subsection{Experimental techniques}
+
+\begin{enumerate}
+    \item Polarisation measurements : here we either apply a voltage and measure the current or the opposite.
+        A potentiostat (galvanostat) is used for controlled-potential (current) experiments. 
+    They can either be dynamic or static.
+    
+    \item Double layer capacitance (galvanostatic impulsion) : equivalent circuit of metal-electrolyte interface with a resistance and a capacitance. The Helmholtz model of rigid electrical double layer is given by $C_H = \frac{\varepsilon\varepsilon_0}{L_H}$, $C_H$ the double layer capacitance, $L_H$ the thickness of the double layer. Then, the Gouy-Chapman model of diffuse electrical double layer : $C_{GC} = \frac{\varepsilon \varepsilon_0}{L_{GC}} \cosh(\frac{zF \Delta \Phi}{2RT})$ with $L_{GC} = (\frac{\varepsilon \varepsilon_0^2 RT}{2z^2 F^2 c_b})^{0.5}$ with $z$ the ion's charge and $c_b$ the salt concentration.\\
+    Finally, we have the stern model of electrical double layer : $C = (C_H^{-1} + C_{GC}^{-1})^{-1}$.\\
+    
+
+    
+    \item Potentiostatic impulsion (Cottrel diffusion equation) :
+    It describes the evolution of current with time during a potential step in case of a mass transport limited electrode reaction. Solving the system yields the Cottrell equation : $i_c = -z F(c_b-c_s) \sqrt{\frac{D}{\pi t}}$.\\
+    
+    \item Cyclic voltammetry :
+    Back and forth potential scan at different rates. For stationary electrodes, a relation exists between the peak current density and the potential scan rate : $j_p = 0.4463 z F[C^*] [\frac{z FvD}{RT}]^{\frac{1}{2}}$.\\
+    
+    \item Rotating Disk Electrodes (RDE) : 
+    \begin{table}[hbt!]
+        \centering
+        \begin{tabular}{c|c|c|c}
+            Geometry & Flow & Characteristic Length L & Sh \\
+            \hline
+            Rotating disk  & laminar (Re<$2.7 \cdot 10^5$) & radius R & $0.62Re^{\frac{1}{2}}$\\
+            Rotating disk & turbulent & radius R & $0.0117 Re^{0.896} Sc^{0.249}$\\
+        \end{tabular}
+    \end{table}
+    The Sherwood number $Sh$ is the mass transfer Nusselt number between fluid and interface ($Sh = \frac{L}{\delta}$, $\delta$ the Nernst characteristic diffusion length). The Levich equation is then : \begin{equation}
+    \begin{gathered}
+        \delta = 1.61 D_B^{1/3} \nu^{1/6} \omega^{-1/2}\\
+        i_{lim} = n F D_B c_B \frac{1}{\delta}
+        \end{gathered}
+    \end{equation}
+    The RDE is a method to achieve SS conditions that allows accurate measurements of diffusion and kinetic parameters under controlled hydrodynamic conditions.
+    The Koutecky-Levich equation adds an offset to the curve. It takes into account the kinetic current : $\frac{1}{i_L} = \frac{1}{i_k} + \frac{1}{i_{L, no kinetic}}$.\\
+
+    \begin{equation}
+        i_{L,no\:equation} = 0.62 n FAD^{2/3} \omega^{1/2} \nu^{-1/6} C_o
+    \end{equation}
+    
+    \item Electrochemical Impedance Spectroscopy (EIS) :
+    An AC voltage with frequencies ranging from MHz to mHz is added to an imposed dc potential. The AC potentials and current responses are then passed to a frequency response analyzer to calculate the impedance and phase shift.    
+    Corrosion happens when 2 or more half cell reactions occur on the electrode.
+    
+\end{enumerate}
+
+\subsection{Electrochemical syntheses}
+Substractive processes: 
+\begin{itemize}
+    \item Electrolytic dissolution : a faradaic current converts solid compounds from an electrode surface into solvated species. This can be used for electropolishing, electrochemical machining, electroleaching, dealloying, surface cleaning.
+    \item EC-induced dissolution : Electrochemical reactions induce local changes of chemical conditions leading to the dissolution of solid species. This can be used for silicon microcomponents and surface nanostructuring. 
+\end{itemize}
+
+Conversion processes :
+\begin{itemize}
+    \item Anodisation : growth of an oxide layer onto a metal electrode by anodic oxidation. Used for protective coatings, nanoporous oxides, decorative, tribology
+    \item Electrosynthesis : chemical transformation where electrodes are used to assis electron transfer reactions. USed for synthesis of added-value products
+    \item Energy conversion and storage : conversion of chemical potential into electrical energy and vice-versa. Applies to batteries, fuel cells, redox flow, light and heat harvesting, synthetic fuels
+    \item Ion transfer : intercalation and extraction of ions. Applies for deionization, ions separation, waste treatment and recycling.    
+\end{itemize}
+
+Additive processes :
+\begin{itemize}
+    \item Electrolytic deposition : a faradaic current converts solvated ions into a solid deposit onto an electrode surface. Applies for functional coatings.
+    \item Electroless deposition : deposition is mediated by redox reactions between a reductant and an oxidant. Applies for metallization of insulating parts, conformal coatings on complex geometries.
+    \item EC-induced precipitation : electrochemical reactions induce local changes of chemical conditions leading to the precipitation of solvated species. A local increase of ionic strength leads to metal oxide/hydroxide precipitates. Typically, the pH but also the oxidation state or coordination. Applies for electroplaitng of oxides, catalysis, functional coatings.
+    \item Electrophoretic deposition : forced migration and desolvation of charged particles in an electric field. Charged particles dispersed in an electrolyte. Any material can develop a surface charge. Used for dielectric coatings. 
+\end{itemize}
+
+\subsection{Kinetics and atomistic}
+Electrodeposition process : \\
+Typical 3 electrodes setup. Measure the substrate potential with a reference electrode. The current passes between the working electrode and the counter electrode.\\
+
+Metals and metallic surfaces :\\
+When immersed in an electrolyte, ions and dipoles will reorganize at the electrolyte.\\
+The Stern model is such that $\frac{1}{C_s} = \frac{1}{C_H}+ \frac{1}{C_{GC}}$ for the double layer capacitance.\\
+
+\subsection{Nucleation and growth - Effect of electroplating parameters}
+
+\subsubsection{Solvation of ions}
+Dissolution of a metal salt in polar solvents. 3 types of interaction : \begin{itemize}
+    \item ion-ion
+    \item ion-dipole
+    \item dipole-dipole
+\end{itemize}
+
+\subsubsection{Cation-surface interaction}
+A negative potential is imposed to the substrate. Interactions cathode cations. Displacement of the hydration shell and transfer of the cation to the surface.\\
+Real surfaces are not ideal surfaces. Coordination number (neighbouring metal atoms) : \begin{itemize}
+    \item Adion at a plane surface site CN=3
+    \item Adion at a monoatomic ledge site CN=5
+    \item Adion at a polyatomic ledge CN=6
+    \item Adion at kink site CN=5/6
+    \item Adion at edge vacancy sites CN=7/8
+    \item Adion at a surface vacancy CN=9
+\end{itemize}
+The electrical activation energy depends on surface site.
+
+\subsubsection{Nucleation and growth process}
+
+Formation of a monoatomic cluster $c_\alpha$ followed by the progressive addition of N atoms to the cluster $c_\alpha = c_{\alpha+N}$. Free energy activation during nuclei formation is a function of the number of atoms : $\Delta G = \sigma_s S - \Delta \mu \frac{V}{V_m}$. For a spherical nucleus, $\Delta G = 4\pi r^2 \sigma_s - \frac{4\pi}{3} r^3 \frac{\Delta \mu}{V_m}$ and $R_c = 2\sigma_s \frac{V_m}{\Delta \mu}$. Expression of the critical volume still holds for different symmetries : $V_c = \Gamma (\sigma_s \frac{V_m}{\Delta \mu})^3$ (for a sphere : $\Gamma = \frac{32\pi}{3}$, for a square $\Gamma = 64$).\\
+
+Nucleation occurs on a foreign substrate : $\Delta G_c^{het} = \Delta G_c^{hom} \theta$ with $\theta = \frac{\text{Volume of the shell}}{\text{Volume of the sphere}} = \frac{2 \sigma_s - \sigma_{Ad}}{2\sigma_s}$.\\
+
+Nucleation mechanisms : \begin{itemize}
+    \item Weak adhesion ($\Delta \sigma >0$) : $\Delta G_c^{2D} = \Delta G_c^{3D}$. For $\eta < \frac{2\Delta \sigma}{azF}$ : 3D nucleation process
+    \item Strong adhesion ($\Delta \sigma<0$) : $\frac{\Delta \sigma}{azF}< \eta$ : 2D nucleation can occur above $E_{eq}$. Limited to 1 or 2 monolayer.
+\end{itemize}
+
+Nucleation kinetics : there exists a uniform probability that a surface site is converted into a nucleus. A surface has only a limited number of available nucleation sites $N_0$. The number of sites occupied is : $N(t) = N_0(1-e^{-k_nt})$.\\
+The growth rate normal to a surface is : $R(t) = \frac{iV_m t}{zF}$. For a hemispherical 3D cluster : $I(t) = 2\pi R(t)^2 j$.\\
+
+\begin{table}[hbt!]
+    \centering
+    \begin{tabular}{c|c|c}
+         & Instantaneous ($k_n>>1$)& Progressive ($k_n<<1$)\\
+        3D & $I(t) = 2\pi N_0 (\frac{V_m}{zF})^2 j^3 t^2$ & $I(t) = 2\pi N_0 k_n(\frac{V_m}{zF})^2 j^3 t^3$ \\
+        2D & $I(t) = 2\pi N_0 \frac{V_m}{zF} j^2 t$ & $I(t) = 2\pi N_0 k_n \frac{V_m}{zF} j^2 t^2$
+    \end{tabular}
+    \caption{t<$t_{max}$ : no mass transfer limitation, no overlapping}
+\end{table}
+
+Steps : $t<\tau_{max}$ pure kinetic control, $t \simeq \tau_{max}$ mixed control, $t>\tau_{max}$ diffusion control.\\
+
+\subsubsection{Microstructure and morphology}
+Atoms are arranged in 3 dimensions with a certain periodicity degree. Monocrystalline : periodicity extends on the whole solid. Polycristalline : periodicity is interrupted at a grain boundary. Nanocrystalline : periodicity extends over a few nanometers. Amorphous : periodicity breaks at short distance.
+
+\subsubsection{Effect of electroplating parameters}
+Dendritic growth : related to crystal symmetry and mass transfer limitation. Final morphology and microstructure is determined by the nucleation rate and nucleation mechanism and by the growth rate and growth orientation.\\
+As the overpotential increases, the current increases. Influencing parameters : polarization, current density, agitation, temperature, supporting electrolyte. They will affect electrocrystallization kinetics. Then, additives inhibits or accelerates electrocrystallization. Dopants modify the electrodeposit properties. Substrate influence induction processes, adhesion and epitaxy. pH influences ion type and solvation, ionic conductivity, surface tension.\\
+
+Additives : \begin{itemize}
+    \item Brighteners : weak inhibitors, increases micro-throwing power. Absorb and inhibit low overpotential regions.
+    \item Levelers : strong inhibitors, increases macro-throwing power. Absorb on low overpotential regions, lower the potential the stronger the inhibition.
+    \item Wetting agents : decreases the surface tension. Ensure a good wetting of the substrate. Prevent trapping of gas bubbles
+    \item Accelerators and suppressors : decreases the electrochemical activation energy via intermediate states (accelerators), increases the electrochemical activation energy by stabilizing cations (suppressors)
+    \item Stress suppressors : chemisorption and incorporation in the metal lattice. Induces compressive stress.
+\end{itemize}
+
+\quad \underline{Pulse and reverse pulse plating :} application of a periodic electrical signal between two electrodes. Typically a succession of rectangular pulses in the millisecond-second ranges.\\
+Advantages : more parameters to control the morphology and microstructure. Possible to tune the micro and macrothrowing powers : leveling without levelers. A way to simultaneously control grain size and internal stress. \\
+Drawbacks : lower efficiency, slow electrodeposition.\\
+
+\subsection{Electrodeposition of alloys and solid solutions}
+\subsubsection{Alloys and solid solutions}
+Phase diagram for metallurgy only useful for predicting the phase-type. Intrisic internal stress due to differences of atom radii. Interstital atom : compressive stress, substitution : compressive if $r_b>r$, tensile otherwise.\\
+
+\subsubsection{Electrodeposition of several elements}
+Direct deposition process : both metal cations are reduced in a single step. \\
+Co-deposition process : both metal cations are reduced independently. \\
+The deposition composition will depend on partial current $i_A$ and $i_B$ : $\frac{n_A}{n_B} = \frac{b \int i_A dt}{a \int i_B dt}$. In case of high overpotential, $\frac{n_A}{n_B} = \frac{C_A^0}{C_B^0} \sqrt{\frac{D_A}{D_B}}$. If $\eta_A>>\eta_B$ : $\frac{n_A}{n_B} = \frac{2}{\pi} \frac{C_A D_A}{j_0^B \eta_B} RT t^{-0.5}$.\\
+The less noble metal becomes the more noble metal. The electrodeposit composition tendency towards overpotential reverts. \\
+
+\subsection{Localized electrodeposition : from 3D parts to nanostructures}
+In an uniform overpotential foeld and uniform current density, electrodeposition occurs uniformly. \\
+As anisotropic substrate, one might consider the highly oriented pyrolytic graphite (HOPG). \\
+
+We can use template-assisted electrodeposition to do some electroforming : mandrel fabrication, metallization, electroforming, separation. \\
+Filling dielectric cavities : exposure of a photosensitive resist spincoated on a metallized Si-wafer, electroplating/dissolution of the resist, filling of the cavities by electrodeposition. \\
+Electrochemical additive manufacturing : the working region is limited by electrochemical conditions. Overpotential field lines are not aligned : charge transfer is localized. \\
+
+\subsection{Fuel cell}
+A fuel cell works like a battery fed with gas. Fuel is directly converted into electricity and useful heat.\\
+\begin{itemize}
+    \item Phosphoric acid fuel cell (PAFC) : Pt electrodes, fed with air. Produces heat and electricity at $200^\circ C$. 
+    \item Polymer Membrane FC/Electrolyte FC (PEM or PEFC) : Pt electrodes, fed with air. Mobile application, cold start, from $0-80^\circ C$.
+    \item Alcaline Fuel cell (AFC) : Ni Ag electrodes, for transport or low cost stationary at $80^\circ C$. It requires pure $H_2$, air without $CO_2$, robust, cheaper catalysts possible, $60\%$ efficiency.
+    \item Solid Oxide Fuel cell (SOFC) : Ni LaSrMn$O_3$ electrodes, used for cogeneration at $600^\circ C$. It is robust but expensive.
+    \item Molten Carbonate fuel cell (MCFC) : Ni LiMn$O_2$, at $650^\circ C$.
+\end{itemize}
+
+Advantages of fuel cell : high electrical efficiency (for small power size, at partial load), low chemical and acoustical emissions, cogeneration of electricity and heat, modularity, fuel flexibility. 
+
+\subsection{Electrolysis}
+$H_2$ does not occur naturally on Earth. It offers all energy uses in addition to being a chemical feedstock for heavy industry. If has high carbon-alternative potential but must be made on massive scale.\\
+Grey $H_2$ is made from fossil sources while blue is made from fossil sources with carbon capture and green is made from renewable energy.\\
+
+Lower electrolysis voltage reduces the parasitic electrical losses. Higher current density reduces the required catalyst area.\\
+In acid solution, only noble metals are stable and the most efficient catalysts (Pt for $H_2$ evolution, $Ir/IrO_2$ for $O_2$ evolution). Interconnects are corroded; Ti sheets are used that are plated with gold/platinum. The Nafion membranes are expensive and contain F.\\
+In alcaline solution, catalysts such as Ni and Fe are stable and sufficiently effective. Stainless steel interconnects can be used. Membranes are Zirfon or anionic conducting.\\
+The flowrate of hydrogen is then : $\dot{n}_{H_2} = \eta_F \frac{nI}{zF}$, $\eta_F$ the Faradaic efficiency. The electrical efficiency is then : $\eta_{HHV/LHV} = \frac{\dot{V}_{H_2} \Delta H_{HHV/LHV}}{P_{el}} = \frac{\dot{V}_{H_2} \Delta H_{HHV/LHV}}{I V_{appl}}$.\\
+
+\quad \underline{Alkaline electrolysis (AEL) :}\\
+Mature technology, large capacity (1400 $Nm^3/h$), low cost, long life ($\simeq 30$years). It offers low current density and limited load range. They produce about $4MW_e$ and have an efficiency of $68\%$.\\
+
+\quad \underline{Polymer electrolyte membrane electrolysis (PEMEL) :}\\
+High current density, wide load range but scarce and expensive materials.\\
+
+\quad \underline{Solid Oxide electrolysis (SOE) :}\\
+Temperature between $650-900^\circ C$. \\
+
+\quad \underline{Anionic exchange membrane electrolysis (AEM) :}\\
+No critical materials as catalysts, alcaline medium allows for stainless steel use.\\
+
+For some important products, the only fabrication method is electrochemical. Advantages are : high product selectivity, easy control of I, V. High efficiency but the disadvantages are  higher electricity cost and hardware cost.
+
+\subsubsection{Material availability}
+\quad \underline{Platinum :}\\
+Exploitable reserves : 71000 t with a production of 200 t/yr. Concentrated in S-Africa, RUS. \\
+
+\quad \underline{Nickel :}\\
+Used for alloys, coatings, catalysts, electronics.\\
+
+\quad \underline{Metal uses :}\\
+Fe by very far the largest : 2500Mt/yr, then "larger" industrial metals > 1Mt/yr (Al, Cr, Cu, Mn, Zn, Ti, Si, Pb, Ni), then "smaller" industrial metals < 1Mt/yr (Mg, Sn, Mo, Co, V, W, Li, Cd), finally precious metals (Ag, Au, PGM).\\
+
+
+
+
+\end{document}
